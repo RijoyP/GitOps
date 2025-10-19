@@ -1,0 +1,15 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: basket-api
+spec:
+  releaseName: basket-api
+  values:
+    image:
+      repository: myacr.azurecr.io/basket-api
+      tag: dev
+    ingress:
+      host: dev.basket-api.example.com
+    env:
+      configMap: basket-config
+      secret: basket-secret
