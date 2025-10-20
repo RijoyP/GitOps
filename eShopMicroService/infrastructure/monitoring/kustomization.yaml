@@ -1,5 +1,0 @@
-resources:
-  - jaeger
-  - zipkin
-  - prometheus
-  - grafana

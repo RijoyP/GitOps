@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kibana
+  namespace: flux-system
+spec:
+  interval: 10m
+  timeout: 10m
+  chart:
+    spec:
+      chart: kibana
+      version: "8.5.x"
+      sourceRef:
+        kind: HelmRepository
+        name: elastic
+        namespace: flux-system
+      interval: 5m
+  targetNamespace: logging
+  dependsOn:
+    - name: elasticsearch
+      namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    # Elasticsearch connection
+    elasticsearchHosts: "http://elasticsearch-master.logging:9200"

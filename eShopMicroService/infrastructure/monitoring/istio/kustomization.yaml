@@ -1,4 +1,0 @@
-resources:
-  - helmrelease-istio-base.yaml
-  - helmrelease-istio-ingressgateway.yaml
-  - helmrelease-istiod.yaml

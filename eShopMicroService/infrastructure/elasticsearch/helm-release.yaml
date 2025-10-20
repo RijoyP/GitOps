@@ -1,0 +1,17 @@
+kind: HelmRelease
+metadata:
+  name: elasticsearch
+  namespace: flux-system
+spec:
+  chart:
+    spec:
+      chart: elasticsearch
+      sourceRef:
+        kind: HelmRepository
+        name: elastic
+        namespace: flux-system
+      version: "8.13.4"
+  interval: 10m
+  values:
+    replicas: 1
+    minimumMasterNodes: 1

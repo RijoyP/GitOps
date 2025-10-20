@@ -1,3 +1,74 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Root kustomization for all infrastructure components
+# This file orchestrates the deployment of all tools to AKS using GitOps
+
+metadata:
+  name: infrastructure-root
+  namespace: flux-system
+
 resources:
-  - istio
-  - monitoring
+  # Phase 1: Service Mesh - Deploy first as it provides observability infrastructure
+  # Istio must be deployed before other services for proper mesh injection
+  - istio/
+
+  # Phase 2: Monitoring Stack - Deploy early to capture metrics from all services
+  # Prometheus should be available before other services start emitting metrics
+  - prometheus/
+
+  # Phase 3: Logging Stack - Deploy Elasticsearch before services that depend on it
+  # Elasticsearch must be ready before Jaeger and Kibana
+  - elasticsearch/
+
+  # Phase 4: Visualization and UI Components
+  # These depend on their respective backend services
+  - grafana/       # Depends on Prometheus (implicit via datasource config)
+  - kibana/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
+
+  # Phase 5: Distributed Tracing Stack
+  # Tracing components can be deployed in parallel
+  - zipkin/        # Independent tracing service
+  - jaeger/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
+
+  # Phase 6: Message Broker - Can be deployed independently
+  - rabbitmq/
+
+# Common labels applied to all resources
+commonLabels:
+  app.kubernetes.io/managed-by: flux
+  app.kubernetes.io/part-of: infrastructure
+  environment: dev
+
+# Common annotations applied to all resources
+commonAnnotations:
+  flux.io/automation: "true"
+  flux.io/git-repo: "infrastructure"
+
+# Build metadata
+buildMetadata:
+  - managedByLabel
+  - originAnnotations
+
+# Namespace configuration (optional - namespaces are created in each component)
+# namespace: flux-system
+
+# Additional configurations
+configurations: []
+
+# Generators (optional)
+# configMapGenerator: []
+# secretGenerator: []
+
+# Transformers (optional)
+# Can be used to apply cross-cutting concerns
+# patches: []
+# patchesStrategicMerge: []
+# patchesJson6902: []
+
+# Images (optional - for image updates)
+# images: []
+
+# Replacements (optional)
+# replacements: []
