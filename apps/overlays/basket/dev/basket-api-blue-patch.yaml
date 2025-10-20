@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-api
+  labels:
+    app: basket-api
+    version: blue
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: basket-api
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: basket-api
+        version: blue
+    spec:
+      containers:
+        - name: basket-api
+          image: myregistry.azurecr.io/basket-api:v1.0.0
+          envFrom:
+            - configMapRef:
+                name: basketapi-config

@@ -1,0 +1,10 @@
+resources:
+  - ../../../base/helmrelease.yaml
+  - catelog-api-configmap.yaml
+  - catelog-api-secret.yaml
+  - destinationrule.yaml
+  - virtualservice.yaml
+
+patchesStrategicMerge:
+  - catelog-api-blue-patch.yaml
+  - catelog-api-green-patch.yaml

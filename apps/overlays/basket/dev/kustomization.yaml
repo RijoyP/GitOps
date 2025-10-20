@@ -1,0 +1,10 @@
+resources:
+  - ../../../base/helmrelease.yaml
+  - basket-api-configmap.yaml
+  - basket-api-secret.yaml
+  - destinationrule.yaml
+  - virtualservice.yaml
+
+patchesStrategicMerge:
+  - basket-api-blue-patch.yaml
+  - basket-api-green-patch.yaml

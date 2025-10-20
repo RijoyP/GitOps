@@ -1,11 +1,11 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: app-base
+  name: zipkin
 spec:
   chart:
     spec:
-      chart: myapp-boilerplate
+      chart: zipkin
       sourceRef:
         kind: HelmRepository
         name: my-helm-repo

@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: order-api
+spec:
+  hosts:
+    - order.example.com
+  http:
+    - route:
+        - destination:
+            host: order-api
+            subset: blue
+          weight: 100
+        - destination:
+            host: order-api
+            subset: green
+          weight: 0

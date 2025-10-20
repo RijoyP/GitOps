@@ -1,8 +1,0 @@
-resources:
-  - ../../base/helmrelease.yaml
-
-patchesStrategicMerge:
-  - basket-api-patch.yaml
-  - order-api-patch.yaml
-  - discount-api-patch.yaml
-  - catalog-api-patch.yaml

@@ -1,0 +1,10 @@
+resources:
+  - ../../../base/helmrelease.yaml
+  - order-api-configmap.yaml
+  - order-api-secret.yaml
+  - destinationrule.yaml
+  - virtualservice.yaml
+
+patchesStrategicMerge:
+  - order-api-blue-patch.yaml
+  - order-api-green-patch.yaml

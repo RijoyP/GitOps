@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: basketapi-config
+data:
+  ASPNETCORE_ENVIRONMENT: Development
+  ConnectionStrings__Database: "Server=basketdb;Port=5432;User Id=postgres;Password=postgres123;Database=BasketDB;"
+  GrpcSetting__DiscountUrl: "https://discountapi:8080"
+  MessageBrocker__Host: "amqp://ecommerce-mq:5672"
+  MessageBrocker__UserName: "guest"
+  MessageBrocker__Password: "guest"
+  AuthAD__Authority: "https://dudeserver:8081"
