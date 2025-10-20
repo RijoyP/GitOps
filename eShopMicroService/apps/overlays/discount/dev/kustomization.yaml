@@ -1,0 +1,10 @@
+resources:
+  - ../../../base/helmrelease.yaml
+  - discount-api-configmap.yaml
+  - discount-api-secret.yaml
+  - destinationrule.yaml
+  - virtualservice.yaml
+
+patchesStrategicMerge:
+  - discount-api-blue-patch.yaml
+  - discount-api-green-patch.yaml

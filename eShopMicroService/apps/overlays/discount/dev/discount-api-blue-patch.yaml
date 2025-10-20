@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discount-api
+  labels:
+    app: discount-api
+    version: blue
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: discount-api
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: discount-api
+        version: blue
+    spec:
+      containers:
+        - name: discount-api
+          image: myregistry.azurecr.io/discount-api:v1.0.0
+          envFrom:
+            - configMapRef:
+                name: discountapi-config
