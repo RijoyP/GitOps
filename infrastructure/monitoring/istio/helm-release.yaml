@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: istio-base
+  namespace: istio-system
+spec:
+  interval: 1h
+  releaseName: istio-base
+  chart:
+    spec:
+      chart: base
+      version: "1.21.0"    # choose the matching Istio chart version
+      sourceRef:
+        kind: HelmRepository
+        name: istio
+        namespace: flux-system
+  install:
+    createNamespace: true
+  values: {}
