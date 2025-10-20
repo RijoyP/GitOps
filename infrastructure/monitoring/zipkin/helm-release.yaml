@@ -1,0 +1,36 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: zipkin
+  namespace: monitoring
+spec:
+  interval: 10m
+  releaseName: zipkin
+  chart:
+    spec:
+      chart: zipkin
+      version: "0.1.0"   # if using Bitnami, chart name might be "zipkin" under bitnami
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+  install:
+    createNamespace: true
+  values:
+    replicaCount: 1
+    persistence:
+      enabled: false
+    service:
+      type: ClusterIP
+    resources:
+      limits:
+        cpu: 300m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    ingress:
+      enabled: true
+      hosts:
+        - name: zipkin.monitoring.example.com
+          path: /
