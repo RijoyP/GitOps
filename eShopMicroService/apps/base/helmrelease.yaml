@@ -5,7 +5,7 @@ metadata:
 spec:
   chart:
     spec:
-      chart: myapp-boilerplate
+      chart: helm/app-boilerplate-chart
       sourceRef:
         kind: HelmRepository
         name: my-helm-repo
