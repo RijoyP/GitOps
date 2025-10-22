@@ -4,26 +4,25 @@ metadata:
   name: istio-base
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 10m
   timeout: 10m
   releaseName: istio-base
   chart:
     spec:
       chart: base
-      version: "1.23.x"
+      version: "1.23.0"  # ✅ adjust to your Istio version
       sourceRef:
         kind: HelmRepository
         name: istio
         namespace: flux-system
-      interval: 12h
   targetNamespace: istio-system
   install:
     createNamespace: true
     remediation:
       retries: 3
   upgrade:
-    cleanupOnFail: true
     remediation:
       retries: 3
   values:
-    defaultRevision: default
+    global:
+      istioNamespace: istio-system
