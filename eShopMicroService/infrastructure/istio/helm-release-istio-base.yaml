@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: base
-      version: "1.23.0"  # ✅ adjust to your Istio version
+      version: "1.23.x"
       sourceRef:
         kind: HelmRepository
         name: istio
