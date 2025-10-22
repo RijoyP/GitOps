@@ -3,6 +3,9 @@ kind: HelmRelease
 metadata:
   name: istio-ingressgateway
   namespace: flux-system
+  labels:
+    app.kubernetes.io/managed-by: flux
+    app.kubernetes.io/component: ingressgateway
 spec:
   interval: 30m
   timeout: 10m
