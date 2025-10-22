@@ -1,20 +1,28 @@
-apiVersion: helm.toolkit.fluxcd.io/v2
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: istiod
+  name: istio-base
   namespace: flux-system
 spec:
+  interval: 10m
+  timeout: 10m
   chart:
     spec:
-      chart: istiod
+      chart: base
+      version: "1.20.x"
       sourceRef:
         kind: HelmRepository
         name: istio
         namespace: flux-system
-        version: "1.22.0"
-        interval: 5m
-  dependsOn:
-  - name: istio-base
+      interval: 5m
+  targetNamespace: istio-system
+  install:
+    crds: Create
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 3
   values:
-    pilot:
-    traceSampling: 1.0
+    defaultRevision: default
