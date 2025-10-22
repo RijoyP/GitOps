@@ -1,57 +1,274 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: grafana
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
+  timeout: 10m
+  releaseName: grafana
+  
   chart:
     spec:
       chart: grafana
-      version: "7.x.x"
+      version: "8.5.x"
       sourceRef:
         kind: HelmRepository
         name: grafana
         namespace: flux-system
-      interval: 5m
+      interval: 12h
+  
   targetNamespace: monitoring
-  dependsOn:
-    - name: prometheus
-      namespace: flux-system
+  
   install:
+    createNamespace: false
     remediation:
       retries: 3
+  
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
+  
+  # Wait for Prometheus to be ready
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: flux-system
+  
   values:
-    adminPassword: "changeme"  # IMPORTANT: Change this or use a secret
+    # Admin credentials
+    adminUser: admin
+    adminPassword: "ChangeMe123!"  # ⚠️ CHANGE THIS!
+    
+    # Replicas
+    replicas: 1
+    
+    # Persistence
     persistence:
       enabled: true
+      storageClassName: managed-premium  # AKS storage class
       size: 10Gi
+      accessModes:
+        - ReadWriteOnce
+    
+    # Resources
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    
+    # Service
+    service:
+      type: LoadBalancer
+      port: 80
+      targetPort: 3000
+      annotations:
+        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /api/health
+    
+    # Ingress (disabled, using LoadBalancer)
+    ingress:
+      enabled: false
+    
+    # Datasources
     datasources:
       datasources.yaml:
         apiVersion: 1
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://prometheus-kube-prometheus-prometheus.monitoring:9090
+            url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
             access: proxy
             isDefault: true
+            jsonData:
+              timeInterval: 30s
+              httpMethod: POST
+
           - name: Jaeger
             type: jaeger
-            url: http://jaeger-query.tracing:16686
+            uid: jaeger
+            url: http://jaeger-query.tracing.svc.cluster.local:16686
             access: proxy
+            jsonData:
+              tracesToLogs:
+                datasourceUid: 'loki'
+          
           - name: Zipkin
             type: zipkin
-            url: http://zipkin.tracing:9411
+            uid: zipkin
+            url: http://zipkin.tracing.svc.cluster.local:9411
             access: proxy
-    service:
-      type: LoadBalancer
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 512Mi
+          
+          - name: Elasticsearch
+            type: elasticsearch
+            url: http://elasticsearch-master.logging.svc.cluster.local:9200
+            access: proxy
+            database: "[logs-]YYYY.MM.DD"
+            jsonData:
+              timeField: "@timestamp"
+              esVersion: "8.0.0"
+              logMessageField: message
+              logLevelField: level
+    
+    # Dashboard providers
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: 'default'
+            orgId: 1
+            folder: ''
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+          
+          - name: 'istio'
+            orgId: 1
+            folder: 'Istio'
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/istio
+          
+          - name: 'kubernetes'
+            orgId: 1
+            folder: 'Kubernetes'
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/kubernetes
+    
+    # Dashboards ConfigMaps (to be created separately)
+    dashboardsConfigMaps:
+      default: "grafana-dashboards"
+      istio: "grafana-dashboards-istio"
+      kubernetes: "grafana-dashboards-k8s"
+    
+    # Plugins
+    plugins:
+      - grafana-piechart-panel
+      - grafana-clock-panel
+      - grafana-simple-json-datasource
+      - grafana-worldmap-panel
+    
+    # Grafana configuration
+    grafana.ini:
+      server:
+        root_url: "%(protocol)s://%(domain)s/"
+        serve_from_sub_path: false
+      
+      analytics:
+        check_for_updates: true
+        reporting_enabled: false
+      
+      log:
+        mode: console
+        level: info
+      
+      paths:
+        data: /var/lib/grafana/
+        logs: /var/log/grafana
+        plugins: /var/lib/grafana/plugins
+        provisioning: /etc/grafana/provisioning
+      
+      auth:
+        disable_login_form: false
+        disable_signout_menu: false
+      
+      auth.anonymous:
+        enabled: false
+      
+      security:
+        admin_user: admin
+        admin_password: admin
+        allow_embedding: true
+      
+      snapshots:
+        external_enabled: false
+      
+      dashboards:
+        default_home_dashboard_path: ""
+      
+      users:
+        allow_sign_up: false
+        auto_assign_org: true
+        auto_assign_org_role: Viewer
+      
+      explore:
+        enabled: true
+      
+      alerting:
+        enabled: true
+    
+    # RBAC
+    rbac:
+      create: true
+      pspEnabled: false
+    
+    serviceAccount:
+      create: true
+      name: grafana
+      annotations: {}
+    
+    # Pod annotations
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "3000"
+      prometheus.io/path: "/metrics"
+    
+    # Security context
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 472
+      fsGroup: 472
+    
+    # Liveness and readiness probes
+    livenessProbe:
+      httpGet:
+        path: /api/health
+        port: 3000
+      initialDelaySeconds: 60
+      timeoutSeconds: 30
+      failureThreshold: 10
+    
+    readinessProbe:
+      httpGet:
+        path: /api/health
+        port: 3000
+      initialDelaySeconds: 30
+      timeoutSeconds: 10
+    
+    # Environment variables
+    env:
+      GF_EXPLORE_ENABLED: "true"
+      GF_PANELS_DISABLE_SANITIZE_HTML: "true"
+      GF_LOG_FILTERS: "rendering:debug"
+      GF_DATE_FORMATS_USE_BROWSER_LOCALE: "true"
+    
+    # Extra environment variables from secrets
+    envFromSecrets: []
+    
+    # Sidecar for dashboard/datasource discovery
+    sidecar:
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        labelValue: "1"
+        folder: /tmp/dashboards
+        folderAnnotation: grafana_folder
+        searchNamespace: ALL
+        provider:
+          foldersFromFilesStructure: true
+      
+      datasources:
+        enabled: true
+        label: grafana_datasource
+        labelValue: "1"
+        searchNamespace: ALL
