@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: eshop-helm-repo
+  namespace: flux-system
+spec:
+  type: oci
+  interval: 5m
+  url: oci://eshopmicroserviceacr.azurecr.io/helm
+  provider: azure
