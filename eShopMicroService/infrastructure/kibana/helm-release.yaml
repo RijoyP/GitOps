@@ -9,10 +9,10 @@ spec:
   chart:
     spec:
       chart: kibana
-      version: "8.5.x"
+      version: "8.5.1"
       sourceRef:
         kind: HelmRepository
-        name: elastic
+        name: eshop-helm-repo
         namespace: flux-system
       interval: 5m
   targetNamespace: logging
