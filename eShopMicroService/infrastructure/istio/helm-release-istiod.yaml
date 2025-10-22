@@ -3,6 +3,9 @@ kind: HelmRelease
 metadata:
   name: istiod
   namespace: flux-system
+  labels:
+    app.kubernetes.io/managed-by: flux
+    app.kubernetes.io/component: istiod
 spec:
   interval: 30m
   timeout: 10m
