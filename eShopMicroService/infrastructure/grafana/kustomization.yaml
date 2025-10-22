@@ -6,7 +6,16 @@ resources:
   - helm-release.yaml
   - configmap-dashboard.yaml
 
-# ✅ This will override the invalid labels
-commonMetadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
+patches:
+  - target:
+      kind: HelmRelease
+    patch: |-
+      - op: replace
+        path: /metadata/labels/app.kubernetes.io~1managed-by
+        value: kustomize
+  - target:
+      kind: ConfigMap
+    patch: |-
+      - op: replace
+        path: /metadata/labels/app.kubernetes.io~1managed-by
+        value: kustomize
