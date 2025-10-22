@@ -5,6 +5,7 @@ metadata:
   namespace: flux-system
   labels:
     app.kubernetes.io/managed-by: flux
+    app.kubernetes.io/component: base
 spec:
   interval: 30m
   timeout: 10m
