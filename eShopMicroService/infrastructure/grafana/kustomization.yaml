@@ -4,4 +4,4 @@ namespace: flux-system
 resources:
   - helm-repository.yaml
   - helm-release.yaml
-  #- configmap-dashboard.yaml
+  - configmap-dashboard.yaml
