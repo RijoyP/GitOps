@@ -10,12 +10,12 @@ patches:
   - target:
       kind: HelmRelease
     patch: |-
-      - op: replace
+      - op: add
         path: /metadata/labels/app.kubernetes.io~1managed-by
         value: kustomize
   - target:
       kind: ConfigMap
     patch: |-
-      - op: replace
+      - op: add
         path: /metadata/labels/app.kubernetes.io~1managed-by
         value: kustomize
