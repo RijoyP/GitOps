@@ -1,66 +1,57 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: grafana
   namespace: flux-system
-  labels:
-    app.kubernetes.io/managed-by: flux
 spec:
-  interval: 30m
-  timeout: 10m
-  releaseName: grafana
+  interval: 10m
   chart:
     spec:
       chart: grafana
-      version: "8.5.x"
+      version: "7.x.x"
       sourceRef:
         kind: HelmRepository
         name: grafana
         namespace: flux-system
-      interval: 12h
+      interval: 5m
   targetNamespace: monitoring
+  dependsOn:
+    - name: prometheus
+      namespace: flux-system
   install:
-    createNamespace: false
     remediation:
       retries: 3
   upgrade:
-    cleanupOnFail: true
     remediation:
       retries: 3
-  dependsOn:
-    - name: kube-prometheus-stack
-      namespace: flux-system
   values:
-    adminUser: admin
-    adminPassword: "ChangeMe123!"
-    replicas: 1
+    adminPassword: "changeme"  # IMPORTANT: Change this or use a secret
     persistence:
       enabled: true
-      storageClassName: managed-premium
       size: 10Gi
-      accessModes:
-        - ReadWriteOnce
-    service:
-      type: LoadBalancer
-      port: 80
-      targetPort: 3000
-      annotations:
-        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /api/health
-    ingress:
-      enabled: false
-    resources:
-      limits:
-        cpu: 500m
-        memory: 512Mi
-      requests:
-        cpu: 100m
-        memory: 256Mi
     datasources:
       datasources.yaml:
         apiVersion: 1
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+            url: http://prometheus-kube-prometheus-prometheus.monitoring:9090
             access: proxy
             isDefault: true
+          - name: Jaeger
+            type: jaeger
+            url: http://jaeger-query.tracing:16686
+            access: proxy
+          - name: Zipkin
+            type: zipkin
+            url: http://zipkin.tracing:9411
+            access: proxy
+    service:
+      type: LoadBalancer
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
