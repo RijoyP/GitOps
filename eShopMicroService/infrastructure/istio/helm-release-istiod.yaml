@@ -4,55 +4,30 @@ metadata:
   name: istiod
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   timeout: 10m
+  releaseName: istiod
   chart:
     spec:
       chart: istiod
-      version: "1.20.x"
+      version: "1.23.x"
       sourceRef:
         kind: HelmRepository
         name: istio
         namespace: flux-system
-      interval: 5m
+      interval: 12h
   targetNamespace: istio-system
   dependsOn:
     - name: istio-base
       namespace: flux-system
   install:
+    createNamespace: false
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
   values:
-    pilot:
-      resources:
-        requests:
-          cpu: 500m
-          memory: 2Gi
-        limits:
-          cpu: 2000m
-          memory: 4Gi
-      autoscaleEnabled: true
-      autoscaleMin: 2
-      autoscaleMax: 5
-    
     global:
-      proxy:
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 2000m
-            memory: 1Gi
-      
-      # Enable tracing
-      tracer:
-        zipkin:
-          address: zipkin.tracing:9411
-    
-    # Telemetry for Prometheus
-    telemetry:
-      enabled: true
+      istioNamespace: istio-system
