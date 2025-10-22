@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: basket-api
-          image: myregistry.azurecr.io/basket-api:v1.0.0
+          image: eshopmicroserviceacr.azurecr.io/basketapi:937
           envFrom:
             - configMapRef:
                 name: basketapi-config
