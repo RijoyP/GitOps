@@ -24,7 +24,7 @@ resources:
 
   # Phase 4: Visualization and UI Components
   # These depend on their respective backend services
-  - grafana/       # Depends on Prometheus (implicit via datasource config)
+  #- grafana/       # Depends on Prometheus (implicit via datasource config)
   #- kibana/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
 
   # Phase 5: Distributed Tracing Stack
