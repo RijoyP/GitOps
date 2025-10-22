@@ -12,7 +12,7 @@ metadata:
 resources:
   # Phase 1: Service Mesh - Deploy first as it provides observability infrastructure
   # Istio must be deployed before other services for proper mesh injection
-  - istio/
+  #- istio/
 
   # Phase 2: Monitoring Stack - Deploy early to capture metrics from all services
   # Prometheus should be available before other services start emitting metrics
