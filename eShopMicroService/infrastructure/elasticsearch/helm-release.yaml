@@ -3,6 +3,8 @@ kind: HelmRelease
 metadata:
   name: elasticsearch
   namespace: flux-system
+  labels:
+    app.kubernetes.io/managed-by: flux
 spec:
   interval: 30m
   timeout: 10m
@@ -10,13 +12,13 @@ spec:
   chart:
     spec:
       chart: elasticsearch
-      version: "8.5.1"
+      version: "8.9.x"
       sourceRef:
         kind: HelmRepository
         name: elastic
         namespace: flux-system
       interval: 12h
-  targetNamespace: elastic-system
+  targetNamespace: logging
   install:
     createNamespace: true
     remediation:
@@ -27,16 +29,14 @@ spec:
       retries: 3
   values:
     replicas: 1
-    minimumMasterNodes: 1
+    persistence:
+      enabled: true
+      storageClassName: managed-premium
+      size: 20Gi
     resources:
-      requests:
-        cpu: 100m
-        memory: 512Mi
       limits:
-        cpu: 500m
+        cpu: 1
         memory: 1Gi
-    volumeClaimTemplate:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 5Gi
+      requests:
+        cpu: 200m
+        memory: 512Mi
