@@ -35,40 +35,10 @@ resources:
   # Phase 6: Message Broker - Can be deployed independently
   #- rabbitmq/
 
-# Common labels applied to all resources
+
 commonLabels:
-  app.kubernetes.io/managed-by: flux
-  app.kubernetes.io/part-of: infrastructure
-  environment: dev
+  app.kubernetes.io/managed-by: fluxcd
+  app.kubernetes.io/part-of: flux-system
 
-# Common annotations applied to all resources
 commonAnnotations:
-  flux.io/automation: "true"
-  flux.io/git-repo: "infrastructure"
-
-# Build metadata
-buildMetadata:
-  - managedByLabel
-  - originAnnotations
-
-# Namespace configuration (optional - namespaces are created in each component)
-# namespace: flux-system
-
-# Additional configurations
-configurations: []
-
-# Generators (optional)
-# configMapGenerator: []
-# secretGenerator: []
-
-# Transformers (optional)
-# Can be used to apply cross-cutting concerns
-# patches: []
-# patchesStrategicMerge: []
-# patchesJson6902: []
-
-# Images (optional - for image updates)
-# images: []
-
-# Replacements (optional)
-# replacements: []
+  fluxcd.io/managed: "true"
