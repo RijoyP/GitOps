@@ -4,5 +4,8 @@ namespace: flux-system
 resources:
   - helm-repository.yaml
   - helm-release-istio-base.yaml
-  - helm-release-istio-ingressgateway.yaml
   - helm-release-istiod.yaml
+  - helm-release-istio-ingressgateway.yaml
+
+commonLabels:
+  app.kubernetes.io/managed-by: flux
