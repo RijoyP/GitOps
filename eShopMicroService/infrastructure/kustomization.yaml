@@ -12,7 +12,7 @@ metadata:
 resources:
   # Phase 1: Service Mesh - Deploy first as it provides observability infrastructure
   # Istio must be deployed before other services for proper mesh injection
-  #- istio/
+  - istio/
 
   # Phase 2: Monitoring Stack - Deploy early to capture metrics from all services
   # Prometheus should be available before other services start emitting metrics
@@ -20,20 +20,20 @@ resources:
 
   # Phase 3: Logging Stack - Deploy Elasticsearch before services that depend on it
   # Elasticsearch must be ready before Jaeger and Kibana
-  #- elasticsearch/
+  - elasticsearch/
 
   # Phase 4: Visualization and UI Components
   # These depend on their respective backend services
-  #- grafana/       # Depends on Prometheus (implicit via datasource config)
-  #- kibana/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
+  - grafana/       # Depends on Prometheus (implicit via datasource config)
+  - kibana/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
 
   # Phase 5: Distributed Tracing Stack
   # Tracing components can be deployed in parallel
-  #- zipkin/        # Independent tracing service
-  #- jaeger/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
+  - zipkin/        # Independent tracing service
+  - jaeger/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
 
   # Phase 6: Message Broker - Can be deployed independently
-  #- rabbitmq/
+  - rabbitmq/
 
 
 commonLabels:
