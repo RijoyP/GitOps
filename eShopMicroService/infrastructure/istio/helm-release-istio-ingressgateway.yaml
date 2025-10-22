@@ -4,54 +4,39 @@ metadata:
   name: istio-ingressgateway
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   timeout: 10m
+  releaseName: istio-ingressgateway
   chart:
     spec:
       chart: gateway
-      version: "1.20.x"
+      version: "1.23.x"
       sourceRef:
         kind: HelmRepository
         name: istio
         namespace: flux-system
-      interval: 5m
+      interval: 12h
   targetNamespace: istio-system
   dependsOn:
     - name: istiod
       namespace: flux-system
   install:
+    createNamespace: false
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
   values:
     service:
       type: LoadBalancer
-      ports:
-        - name: status-port
-          port: 15021
-          protocol: TCP
-          targetPort: 15021
-        - name: http2
-          port: 80
-          protocol: TCP
-          targetPort: 80
-        - name: https
-          port: 443
-          protocol: TCP
-          targetPort: 443
-    
+    autoscaling:
+      enabled: false
     resources:
       requests:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 2000m
-        memory: 1Gi
-    
-    autoscaling:
-      enabled: true
-      minReplicas: 2
-      maxReplicas: 5
-      targetCPUUtilizationPercentage: 80
+        cpu: 500m
+        memory: 512Mi
