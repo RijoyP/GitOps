@@ -9,10 +9,10 @@ spec:
   chart:
     spec:
       chart: elasticsearch
-      version: "8.13.4"
+      version: "8.5.1"
       sourceRef:
         kind: HelmRepository
-        name: elastic
+        name: eshop-helm-repo
         namespace: flux-system
       interval: 5m
   targetNamespace: logging
