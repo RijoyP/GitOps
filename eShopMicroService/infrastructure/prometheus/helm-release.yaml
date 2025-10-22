@@ -8,10 +8,10 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: "65.3.1"
+      version: "65.0.0"
       sourceRef:
         kind: HelmRepository
-        name: eshop-helm-repo
+        name: prometheus-community
         namespace: flux-system
   install:
     createNamespace: true
