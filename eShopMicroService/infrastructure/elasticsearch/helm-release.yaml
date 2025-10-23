@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  timeout: 15m
+  timeout: 30m
   chart:
     spec:
       chart: elasticsearch
@@ -26,13 +26,12 @@ spec:
     minimumMasterNodes: 1
     resources:
       requests:
-        memory: 2Gi
-        cpu: 1
+        cpu: "200m"
+        memory: "1Gi"
       limits:
-        memory: 4Gi
-        cpu: 2
+        cpu: "500m"
+        memory: "2Gi"
     volumeClaimTemplate:
-      accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 10Gi
+          storage: 5Gi
