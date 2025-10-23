@@ -17,10 +17,6 @@ spec:
   dependsOn:
     - name: prometheus
       namespace: flux-system
-    - name: jaeger
-      namespace: flux-system
-    - name: zipkin
-      namespace: flux-system
   install:
     remediation:
       retries: 3
