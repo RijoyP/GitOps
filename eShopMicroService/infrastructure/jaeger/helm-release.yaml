@@ -12,7 +12,7 @@ spec:
       version: "jaeger-3.4.1"                       # choose a stable chart version
       sourceRef:
         kind: HelmRepository
-        name: jaeger
+        name: jaegertracing
         namespace: flux-system
   install:
     createNamespace: true

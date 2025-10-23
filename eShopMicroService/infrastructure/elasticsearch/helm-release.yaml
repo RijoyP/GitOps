@@ -2,7 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: elasticsearch
-  namespace: flux-system
+  namespace: monitoring
 spec:
   interval: 10m
   timeout: 15m
@@ -15,7 +15,7 @@ spec:
         name: elastic-helm-repo
         namespace: flux-system
       interval: 5m
-  targetNamespace: logging
+  targetNamespace: monitoring
   install:
     remediation:
       retries: 3
