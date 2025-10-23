@@ -17,7 +17,7 @@ spec:
   targetNamespace: monitoring
   dependsOn:
     - name: prometheus
-      namespace: flux-system
+      namespace: monitoring
   install:
     remediation:
       retries: 3

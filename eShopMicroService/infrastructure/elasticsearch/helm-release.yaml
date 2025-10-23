@@ -23,6 +23,17 @@ spec:
     remediation:
       retries: 3
   values:
-    # Cluster configuration
     replicas: 1
     minimumMasterNodes: 1
+    resources:
+      requests:
+        memory: 2Gi
+        cpu: 1
+      limits:
+        memory: 4Gi
+        cpu: 2
+    volumeClaimTemplate:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
