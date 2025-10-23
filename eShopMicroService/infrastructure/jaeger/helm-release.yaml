@@ -9,10 +9,10 @@ spec:
   chart:
     spec:
       chart: jaeger
-      version: "3.3.1"                       # choose a stable chart version
+      version: "jaeger-3.4.1"                       # choose a stable chart version
       sourceRef:
         kind: HelmRepository
-        name: eshop-helm-repo
+        name: jaeger
         namespace: flux-system
   install:
     createNamespace: true

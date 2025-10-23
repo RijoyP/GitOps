@@ -1,8 +1,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: bitnami
+  name: zipkin
   namespace: flux-system
 spec:
-  url: https://charts.bitnami.com/bitnami
+  url: https://zipkin.io/zipkin-helm
   interval: 1h

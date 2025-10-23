@@ -12,7 +12,7 @@ spec:
       version: "0.4.0"   # if using Bitnami, chart name might be "zipkin" under bitnami
       sourceRef:
         kind: HelmRepository
-        name: eshop-helm-repo
+        name: zipkin
         namespace: flux-system
   install:
     createNamespace: true
