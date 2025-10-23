@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: jaeger
-      version: "jaeger-3.4.1"                       # choose a stable chart version
+      version: "3.4.1"                       # choose a stable chart version
       sourceRef:
         kind: HelmRepository
         name: jaegertracing
