@@ -9,26 +9,37 @@ spec:
   chart:
     spec:
       chart: jaeger
-      version: "3.4.1"                       # choose a stable chart version
+      version: "3.4.1"
       sourceRef:
         kind: HelmRepository
         name: jaegertracing
         namespace: flux-system
+      interval: 5m
+  targetNamespace: tracing
   install:
     createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  dependsOn:
+    - name: elasticsearch         # ensure Elasticsearch is deployed first
+      namespace: flux-system
   values:
-    # For small clusters use "allInOne: true" - for production disable and use separate components
-    allInOne: false
-    provisionDataStore: true
-    persistence:
-      # enable persistence for collector/query if you have PVs/StorageClass
-      enabled: true
-      size: 10Gi
-    cassandra:                              # or use "es" (elasticsearch) depending on storage
+    allInOne:
       enabled: false
-    esIndexCleaner:
-      enabled: false
+    provisionDataStore:           # fixed structure
+      cassandra: false
+      elasticsearch: true
+    storage:
+      type: elasticsearch
+      options:
+        es:
+          server-urls: http://elasticsearch-master.logging.svc.cluster.local:9200
     collector:
+      service:
+        type: ClusterIP
       resources:
         requests:
           cpu: "200m"
@@ -37,6 +48,8 @@ spec:
           cpu: "500m"
           memory: "1Gi"
     query:
+      service:
+        type: LoadBalancer
       resources:
         requests:
           cpu: "100m"
@@ -45,11 +58,4 @@ spec:
           cpu: "300m"
           memory: "512Mi"
     ingress:
-      enabled: true
-      # If you use an ingress controller, configure ingress annotations/hosts here
-      annotations: {}
-      hosts:
-        - host: jaeger.monitoring.example.com
-          paths:
-            - path: /
-              pathType: Prefix
+      enabled: false
