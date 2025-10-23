@@ -4,179 +4,82 @@ metadata:
   name: elasticsearch
   namespace: flux-system
 spec:
-  interval: 30m
-  timeout: 20m
+  interval: 10m
+  timeout: 15m
   releaseName: elasticsearch
   
   chart:
     spec:
       chart: elasticsearch
-      version: "8.5.1"
+      version: "7.17.3"  # Stable, well-tested version
       sourceRef:
         kind: HelmRepository
         name: elastic
         namespace: flux-system
-      interval: 12h
+      interval: 24h
   
   targetNamespace: logging
   
   install:
+    crds: Skip
     createNamespace: false
     remediation:
-      retries: 3
-    timeout: 20m
+      retries: 5
+    timeout: 15m
   
   upgrade:
+    crds: Skip
     cleanupOnFail: true
     remediation:
-      retries: 3
-    timeout: 20m
+      retries: 5
+    timeout: 15m
   
+  # Keep minimal values for reliability
   values:
-    # Cluster name
-    clusterName: "elasticsearch"
-    nodeGroup: "master"
-    
-    # Replicas - use 1 for dev, 3 for production
+    # Single node setup
     replicas: 1
     minimumMasterNodes: 1
     
-    # Image
-    image: "docker.elastic.co/elasticsearch/elasticsearch"
-    imageTag: "8.5.1"
-    imagePullPolicy: "IfNotPresent"
-    
-    # Pod labels
-    labels:
-      app: elasticsearch
-      component: logging
-    
-    # Resources
+    # Reduced resources for stability
     resources:
       requests:
-        cpu: "500m"
-        memory: "2Gi"
+        cpu: "200m"
+        memory: "1Gi"
       limits:
-        cpu: "2000m"
-        memory: "4Gi"
+        cpu: "1000m"
+        memory: "2Gi"
     
-    # JVM heap size (50% of memory limit)
-    esJavaOpts: "-Xmx2g -Xms2g"
+    # Smaller heap
+    esJavaOpts: "-Xmx512m -Xms512m"
     
-    # Extra environment variables
-    extraEnvs:
-      - name: ELASTIC_PASSWORD
-        value: "changeme"  # Change this!
-      - name: discovery.type
-        value: "single-node"  # Change to "zen" for multi-node
-    
-    # Elasticsearch configuration
-    esConfig:
-      elasticsearch.yml: |
-        # Cluster settings
-        cluster.name: elasticsearch
-        network.host: 0.0.0.0
-        
-        # Security settings (disabled for simplicity, enable in production!)
-        xpack.security.enabled: false
-        xpack.security.transport.ssl.enabled: false
-        xpack.security.http.ssl.enabled: false
-        
-        # Monitoring
-        xpack.monitoring.collection.enabled: true
-        
-        # Index management
-        action.auto_create_index: true
-        action.destructive_requires_name: true
-    
-    # Persistence
-    persistence:
-      enabled: true
-      labels:
-        enabled: false
-    
-    # Volume claim template
+    # Storage
     volumeClaimTemplate:
       accessModes: ["ReadWriteOnce"]
-      storageClassName: "managed-premium"  # AKS storage class
+      storageClassName: "default"  # Use default storage class
       resources:
         requests:
-          storage: 30Gi
+          storage: 10Gi
+    
+    # Minimal ES config
+    esConfig:
+      elasticsearch.yml: |
+        cluster.name: "elasticsearch"
+        network.host: 0.0.0.0
+        xpack.security.enabled: false
+        discovery.type: single-node
     
     # Service
     service:
-      enabled: true
       type: ClusterIP
-      httpPort: 9200
-      transportPort: 9300
-      annotations: {}
-      labels: {}
     
-    # Ingress (disabled - using Istio)
-    ingress:
-      enabled: false
-    
-    # Network policy
-    networkPolicy:
-      enabled: false
-    
-    # Pod disruption budget
-    maxUnavailable: 1
-    
-    # Update strategy
-    updateStrategy: RollingUpdate
-    
-    # Anti-affinity
-    antiAffinity: "soft"
-    antiAffinityTopologyKey: "kubernetes.io/hostname"
-    
-    # Node selector
-    nodeSelector: {}
-    
-    # Tolerations
-    tolerations: []
-    
-    # Init containers
+    # Disable features we don't need
     sysctlInitContainer:
-      enabled: true
+      enabled: false
     
-    # Security context
-    podSecurityContext:
-      fsGroup: 1000
-      runAsUser: 1000
-    
-    securityContext:
-      capabilities:
-        drop:
-          - ALL
-      runAsNonRoot: true
-      runAsUser: 1000
-    
-    # Readiness probe
+    # Simple probes
     readinessProbe:
       failureThreshold: 3
-      initialDelaySeconds: 30
+      initialDelaySeconds: 10
       periodSeconds: 10
       successThreshold: 3
       timeoutSeconds: 5
-    
-    # Health check host
-    clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
-    
-    # Lifecycle hooks
-    lifecycle:
-      preStop:
-        exec:
-          command: ["/bin/sh", "-c", "sleep 20"]
-    
-    # Extra init containers (increase vm.max_map_count)
-    extraInitContainers:
-      - name: increase-vm-max-map
-        image: busybox:latest
-        command: ["sysctl", "-w", "vm.max_map_count=262144"]
-        securityContext:
-          privileged: true
-    
-    # Prometheus monitoring
-    prometheus:
-      enabled: false
