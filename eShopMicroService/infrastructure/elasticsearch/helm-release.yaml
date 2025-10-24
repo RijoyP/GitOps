@@ -23,7 +23,7 @@ spec:
     createNamespace: false
     remediation:
       retries: 5
-    timeout: 15m
+    timeout: 30m
   
   upgrade:
     crds: Skip
@@ -37,47 +37,22 @@ spec:
     # Single node setup
     replicas: 1
     minimumMasterNodes: 1
-    
-    # Reduced resources for stability
     resources:
       requests:
-        cpu: "200m"
-        memory: "1Gi"
+        cpu: "100m"
+        memory: "512Mi"
       limits:
         cpu: "1000m"
-        memory: "2Gi"
+        memory: "1Gi"
     
-    # Smaller heap
-    esJavaOpts: "-Xmx512m -Xms512m"
+    # Small heap
+    esJavaOpts: "-Xmx256m -Xms256m"
     
-    # Storage
-    volumeClaimTemplate:
-      accessModes: ["ReadWriteOnce"]
-      storageClassName: "default"  # Use default storage class
-      resources:
-        requests:
-          storage: 10Gi
-    
-    # Minimal ES config
-    esConfig:
-      elasticsearch.yml: |
-        cluster.name: "elasticsearch"
-        network.host: 0.0.0.0
-        xpack.security.enabled: false
-        discovery.type: single-node
+    # Disable resource-intensive features
+    sysctlInitContainer:
+      enabled: false
     
     # Service
     service:
       type: ClusterIP
     
-    # Disable features we don't need
-    sysctlInitContainer:
-      enabled: false
-    
-    # Simple probes
-    readinessProbe:
-      failureThreshold: 3
-      initialDelaySeconds: 10
-      periodSeconds: 10
-      successThreshold: 3
-      timeoutSeconds: 5
