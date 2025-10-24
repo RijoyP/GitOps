@@ -4,8 +4,8 @@ metadata:
   name: jaeger
   namespace: monitoring
 spec:
-  releaseName: jaeger
   interval: 15m
+  releaseName: jaeger
   chart:
     spec:
       chart: jaeger
@@ -14,22 +14,18 @@ spec:
         kind: HelmRepository
         name: jaegertracing
         namespace: flux-system
+  install:
+    timeout: 10m
+    remediation:
+      retries: 3
   values:
+    storage:
+      type: memory           
     provisionDataStore:
       cassandra: false
       elasticsearch: false
-    storage:
-      type: memory
-    collector:
-      replicaCount: 1
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-    query:
+    allInOne:
+      enabled: true          
       resources:
         requests:
           cpu: 100m
@@ -38,12 +34,10 @@ spec:
           cpu: 200m
           memory: 256Mi
     agent:
-      resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          cpu: 100m
-          memory: 128Mi
+      enabled: false         
+    collector:
+      enabled: false
+    query:
+      enabled: false
     service:
       type: ClusterIP
