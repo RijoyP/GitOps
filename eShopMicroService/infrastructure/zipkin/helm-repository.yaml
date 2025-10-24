@@ -1,8 +1,8 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta1
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: zipkin
   namespace: flux-system
 spec:
-  url: https://zipkin.io/zipkin-helm
   interval: 1h
+  url: https://zipkin.io/zipkin-helm

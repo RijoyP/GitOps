@@ -2,18 +2,18 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: zipkin
-  namespace: monitoring
+  namespace: flux-system
 spec:
   releaseName: zipkin
-  interval: 10m
-  timeout: 15m
+  interval: 15m
+  timeout: 10m
   chart:
     spec:
       chart: zipkin
-      version: "0.4.0"
+      version: "0.3.3"   # or another version supported in that repo
       sourceRef:
         kind: HelmRepository
-        name: openzipkin
+        name: zipkin-helm
         namespace: flux-system
   values:
     image:
@@ -21,10 +21,10 @@ spec:
       tag: 2.24
     resources:
       requests:
-        cpu: 50m
-        memory: 128Mi
+        cpu: 100m
+        memory: 256Mi
       limits:
         cpu: 200m
-        memory: 256Mi
+        memory: 512Mi
     service:
       type: ClusterIP
