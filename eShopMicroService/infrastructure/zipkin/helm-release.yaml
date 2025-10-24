@@ -2,35 +2,29 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: zipkin
-  namespace: monitoring
+  namespace: flux-system
 spec:
-  interval: 10m
   releaseName: zipkin
+  interval: 10m
+  timeout: 15m
   chart:
     spec:
       chart: zipkin
-      version: "0.4.0"   
+      version: "0.4.0"
       sourceRef:
         kind: HelmRepository
-        name: zipkin
+        name: openzipkin
         namespace: flux-system
-  install:
-    createNamespace: true
-  values: 
-    replicaCount: 1
-    persistence:
-      enabled: false
+  values:
+    image:
+      repository: openzipkin/zipkin
+      tag: 2.24
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
     service:
       type: ClusterIP
-    resources:
-      limits:
-        cpu: 300m
-        memory: 512Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-    ingress:
-      enabled: true
-      hosts:
-        - name: zipkin.monitoring.example.com
-          path: /
