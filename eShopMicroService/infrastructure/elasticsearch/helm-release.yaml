@@ -14,9 +14,7 @@ spec:
         name: elastic
         namespace: flux-system
   values:
-    image:
-      repository: docker.elastic.co/elasticsearch/elasticsearch
-      tag: "7.9.2"
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
     replicas: 1
     minimumMasterNodes: 1
     resources:
@@ -31,3 +29,4 @@ spec:
       resources:
         requests:
           storage: 1Gi
+
