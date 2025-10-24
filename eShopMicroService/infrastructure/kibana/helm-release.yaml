@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: kibana
-      version: "7.9.2"
+      version: "7.17.3"
       sourceRef:
         kind: HelmRepository
         name: elastic-helm-repo
