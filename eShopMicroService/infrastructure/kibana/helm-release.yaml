@@ -1,176 +1,28 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kibana
-  namespace: flux-system
+  namespace: logging
 spec:
-  interval: 30m
-  timeout: 15m
   releaseName: kibana
-  
+  interval: 15m
   chart:
     spec:
       chart: kibana
-      version: "7.17.3"
+      version: 8.*
       sourceRef:
         kind: HelmRepository
-        name: elastic-helm-repo
+        name: elastic
         namespace: flux-system
-      interval: 12h
-  
-  dependsOn:
-    - name: elasticsearch
-      namespace: flux-system
-  
-  install:
-    createNamespace: false
-    remediation:
-      retries: 3
-    timeout: 15m
-  
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-    timeout: 15m
-  
   values:
-    # Elasticsearch connection
-    elasticsearchHosts: "http://elasticsearch-master.logging.svc.cluster.local:9200"
-    
-    # Image
-    image: "docker.elastic.co/kibana/kibana"
-    imageTag: "8.5.1"
-    imagePullPolicy: "IfNotPresent"
-    
-    # Replicas
     replicas: 1
-    
-    # Pod labels
-    labels:
-      app: kibana
-      component: logging
-    
-    # Resources
     resources:
       requests:
-        cpu: "500m"
-        memory: "1Gi"
+        cpu: 100m
+        memory: 256Mi
       limits:
-        cpu: "2000m"
-        memory: "2Gi"
-    
-    # Protocol (http/https)
-    protocol: http
-    
-    # Server host
-    serverHost: "0.0.0.0"
-    
-    # Kibana configuration
-    kibanaConfig:
-      kibana.yml: |
-        # Server settings
-        server.name: kibana
-        server.host: "0.0.0.0"
-        server.port: 5601
-        
-        # Elasticsearch connection
-        elasticsearch.hosts: ["http://elasticsearch-master.logging.svc.cluster.local:9200"]
-        elasticsearch.requestTimeout: 132000
-        
-        # Security (disabled for simplicity)
-        xpack.security.enabled: false
-        elasticsearch.ssl.verificationMode: none
-        
-        # Monitoring
-        xpack.monitoring.enabled: true
-        xpack.monitoring.kibana.collection.enabled: true
-        xpack.monitoring.ui.container.elasticsearch.enabled: true
-        
-        # UI settings
-        xpack.reporting.kibanaServer.hostname: kibana.logging.svc.cluster.local
-        
-        # Logging
-        logging.root.level: info
-    
-    # Service
+        cpu: 200m
+        memory: 512Mi
+    elasticsearchHosts: "http://elasticsearch-master:9200"
     service:
       type: ClusterIP
-      port: 5601
-      nodePort: null
-      labels: {}
-      annotations: {}
-      loadBalancerIP: ""
-      loadBalancerSourceRanges: []
-      externalTrafficPolicy: null
-    
-    # Ingress (disabled - using Istio)
-    ingress:
-      enabled: false
-    
-    # Readiness probe
-    readinessProbe:
-      failureThreshold: 3
-      initialDelaySeconds: 30
-      periodSeconds: 10
-      successThreshold: 1
-      timeoutSeconds: 5
-    
-    # Health check path
-    healthCheckPath: "/api/status"
-    
-    # Lifecycle hooks
-    lifecycle:
-      preStop:
-        exec:
-          command: ["/bin/sh", "-c", "sleep 20"]
-    
-    # Security context
-    podSecurityContext:
-      fsGroup: 1000
-      runAsUser: 1000
-    
-    securityContext:
-      capabilities:
-        drop:
-          - ALL
-      runAsNonRoot: true
-      runAsUser: 1000
-    
-    # Service account
-    serviceAccount:
-      create: true
-      name: kibana
-      automountServiceAccountToken: true
-    
-    # Priority class
-    priorityClassName: ""
-    
-    # HTTP port
-    httpPort: 5601
-    
-    # Extra environment variables
-    extraEnvs:
-      - name: "NODE_OPTIONS"
-        value: "--max-old-space-size=1800"
-      - name: "ELASTICSEARCH_USERNAME"
-        value: "elastic"
-      - name: "ELASTICSEARCH_PASSWORD"
-        value: "changeme"  # Change this!
-    
-    # Extra volumes
-    extraVolumes: []
-    extraVolumeMounts: []
-    
-    # Affinity
-    affinity: {}
-    
-    # Node selector
-    nodeSelector: {}
-    
-    # Tolerations
-    tolerations: []
-    
-    # Pod annotations
-    podAnnotations:
-      co.elastic.logs/enabled: "false"

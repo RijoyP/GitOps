@@ -1,410 +1,49 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: jaeger
-  namespace: flux-system
+  namespace: monitoring
 spec:
-  interval: 30m
-  timeout: 15m
   releaseName: jaeger
-  
+  interval: 15m
   chart:
     spec:
       chart: jaeger
-      version: "3.3.1"
+      version: 3.*
       sourceRef:
         kind: HelmRepository
         name: jaegertracing
         namespace: flux-system
-      interval: 12h
-  
-  dependsOn:
-    - name: elasticsearch
-      namespace: flux-system
-  
-  install:
-    createNamespace: false
-    remediation:
-      retries: 3
-    timeout: 15m
-  
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-    timeout: 15m
-  
   values:
-    # Storage backend configuration
     provisionDataStore:
       cassandra: false
-      elasticsearch: false  # We manage Elasticsearch separately
-    
-    # Storage type and configuration
+      elasticsearch: false
     storage:
-      type: elasticsearch
-      elasticsearch:
-        scheme: http
-        host: elasticsearch-master.logging.svc.cluster.local
-        port: 9200
-        user: elastic
-        password: changeme  # Change this!
-        nodesWanOnly: false
-        usePassword: false  # Set to true if using password
-        
-        # Index configuration
-        indexPrefix: "jaeger"
-        
-        # Additional config
-        extraEnv:
-          - name: ES_TAGS_AS_FIELDS_ALL
-            value: "true"
-    
-    # =============================================================================
-    # JAEGER AGENT
-    # =============================================================================
-    agent:
-      enabled: true
-      
-      # Deploy as DaemonSet
-      daemonset:
-        useHostPort: true
-      
-      # Image
-      image: jaegertracing/jaeger-agent
-      tag: 1.52.0
-      pullPolicy: IfNotPresent
-      
-      # Service configuration
-      service:
-        # Jaeger Agent ports
-        zipkinThriftPort: 5775
-        compactPort: 6831
-        binaryPort: 6832
-        samplingPort: 5778
-        type: ClusterIP
-      
-      # Resources
-      resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          cpu: 500m
-          memory: 512Mi
-      
-      # Pod annotations
-      podAnnotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "5778"
-      
-      # Service monitor for Prometheus
-      serviceMonitor:
-        enabled: false
-      
-      # Security context
-      podSecurityContext: {}
-      securityContext: {}
-      
-      # Node selector
-      nodeSelector: {}
-      
-      # Tolerations (allow on all nodes)
-      tolerations:
-        - effect: NoSchedule
-          operator: Exists
-    
-    # =============================================================================
-    # JAEGER COLLECTOR
-    # =============================================================================
+      type: memory
     collector:
-      enabled: true
-      
-      # Image
-      image: jaegertracing/jaeger-collector
-      tag: 1.52.0
-      pullPolicy: IfNotPresent
-      
-      # Replicas
       replicaCount: 1
-      
-      # Service configuration
-      service:
-        type: ClusterIP
-        # gRPC port
-        grpc:
-          port: 14250
-        # HTTP port (for health checks and metrics)
-        http:
-          port: 14268
-        # Zipkin compatible port
-        zipkin:
-          port: 9411
-        # OTLP gRPC port
-        otlp:
-          grpc:
-            name: otlp-grpc
-            port: 4317
-          # OTLP HTTP port
-          http:
-            name: otlp-http
-            port: 4318
-      
-      # Resources
-      resources:
-        requests:
-          cpu: 100m
-          memory: 256Mi
-        limits:
-          cpu: 1000m
-          memory: 1Gi
-      
-      # Autoscaling
-      autoscaling:
-        enabled: true
-        minReplicas: 1
-        maxReplicas: 5
-        targetCPUUtilizationPercentage: 80
-        targetMemoryUtilizationPercentage: 80
-      
-      # Pod annotations
-      podAnnotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "14269"
-      
-      # Service monitor
-      serviceMonitor:
-        enabled: false
-      
-      # Sampling configuration
-      sampling:
-        samplingStrategies: |
-          {
-            "default_strategy": {
-              "type": "probabilistic",
-              "param": 1.0
-            },
-            "service_strategies": [
-              {
-                "service": "important-service",
-                "type": "probabilistic",
-                "param": 1.0
-              }
-            ]
-          }
-      
-      # Security context
-      podSecurityContext:
-        runAsUser: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-      
-      securityContext:
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsNonRoot: true
-        runAsUser: 1000
-      
-      # Node selector
-      nodeSelector: {}
-      
-      # Tolerations
-      tolerations: []
-      
-      # Affinity
-      affinity: {}
-    
-    # =============================================================================
-    # JAEGER QUERY (UI)
-    # =============================================================================
-    query:
-      enabled: true
-      
-      # Image
-      image: jaegertracing/jaeger-query
-      tag: 1.52.0
-      pullPolicy: IfNotPresent
-      
-      # Replicas
-      replicaCount: 1
-      
-      # Service configuration
-      service:
-        type: ClusterIP
-        port: 16686
-        targetPort: 16686
-      
-      # Ingress (disabled - using Istio)
-      ingress:
-        enabled: false
-      
-      # Resources
       resources:
         requests:
           cpu: 100m
           memory: 128Mi
         limits:
-          cpu: 500m
-          memory: 512Mi
-      
-      # Base path for UI
-      basePath: /
-      
-      # Query options
-      queryOptions:
-        maxClockSkewAdjust: 0
-        logAccessDeniedError: false
-      
-      # UI configuration
-      uiConfig: |
-        {
-          "monitor": {
-            "menuEnabled": true
-          },
-          "dependencies": {
-            "menuEnabled": true
-          },
-          "archiveEnabled": false,
-          "tracking": {
-            "gaID": ""
-          },
-          "linkPatterns": []
-        }
-      
-      # Pod annotations
-      podAnnotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "16687"
-      
-      # Service monitor
-      serviceMonitor:
-        enabled: false
-      
-      # Security context
-      podSecurityContext:
-        runAsUser: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-      
-      securityContext:
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsNonRoot: true
-        runAsUser: 1000
-      
-      # Node selector
-      nodeSelector: {}
-      
-      # Tolerations
-      tolerations: []
-      
-      # Affinity
-      affinity: {}
-    
-    # =============================================================================
-    # ELASTICSEARCH INDEX CLEANER
-    # =============================================================================
-    esIndexCleaner:
-      enabled: true
-      
-      # Number of days to keep indices
-      numberOfDays: 7
-      
-      # Schedule (daily at 23:55)
-      schedule: "55 23 * * *"
-      
-      # Resources
+          cpu: 200m
+          memory: 256Mi
+    query:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+    agent:
       resources:
         requests:
           cpu: 50m
           memory: 64Mi
         limits:
-          cpu: 200m
-          memory: 256Mi
-      
-      # Security context
-      podSecurityContext:
-        runAsUser: 1000
-        runAsNonRoot: true
-      
-      securityContext:
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsNonRoot: true
-        runAsUser: 1000
-    
-    # =============================================================================
-    # ELASTICSEARCH ROLLOVER
-    # =============================================================================
-    esRollover:
-      enabled: false
-      schedule: "0 0 * * *"
-      conditions: '{"max_age": "7d"}'
-    
-    # =============================================================================
-    # SPARK DEPENDENCIES JOB (Optional - for service dependency graph)
-    # =============================================================================
-    spark:
-      enabled: false
-    
-    # =============================================================================
-    # SCHEMA JOB (Creates Elasticsearch indices)
-    # =============================================================================
-    schema:
-      enabled: true
-      activeDeadlineSeconds: 300
-      
-      # Resources
-      resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-      
-      # Security context
-      podSecurityContext:
-        runAsUser: 1000
-        runAsNonRoot: true
-      
-      securityContext:
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsNonRoot: true
-        runAsUser: 1000
-    
-    # =============================================================================
-    # HOTROD EXAMPLE APP (for testing)
-    # =============================================================================
-    hotrod:
-      enabled: false
-    
-    # =============================================================================
-    # GLOBAL SETTINGS
-    # =============================================================================
-    
-    # Service account
-    serviceAccount:
-      create: true
-      name: jaeger
-    
-    # RBAC
-    rbac:
-      create: true
-    
-    # Global labels
-    labels:
-      app: jaeger
-      component: tracing
-    
-    # Global annotations
-    annotations: {}
+          cpu: 100m
+          memory: 128Mi
+    service:
+      type: ClusterIP
