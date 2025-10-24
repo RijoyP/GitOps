@@ -18,6 +18,10 @@ spec:
     auth:
       username: user
       password: user123
+    image:
+      registry: docker.io
+      repository: bitnami/rabbitmq
+      tag: 3.12.12-debian-11-r10 
     service:
       type: ClusterIP
     resources:
