@@ -1,43 +1,40 @@
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: jaeger
   namespace: monitoring
 spec:
-  interval: 15m
-  releaseName: jaeger
-  chart:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
     spec:
-      chart: jaeger
-      version: 3.*
-      sourceRef:
-        kind: HelmRepository
-        name: jaegertracing
-        namespace: flux-system
-  install:
-    timeout: 10m
-    remediation:
-      retries: 3
-  values:
-    storage:
-      type: memory           
-    provisionDataStore:
-      cassandra: false
-      elasticsearch: false
-    allInOne:
-      enabled: true          
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-    agent:
-      enabled: false         
-    collector:
-      enabled: false
-    query:
-      enabled: false
-    service:
-      type: ClusterIP
+      containers:
+        - name: jaeger
+          image: jaegertracing/all-in-one:1.53
+          ports:
+            - containerPort: 16686
+            - containerPort: 6831
+              protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+  namespace: monitoring
+spec:
+  selector:
+    app: jaeger
+  ports:
+    - name: ui
+      port: 16686
+      targetPort: 16686
+    - name: udp-collector
+      port: 6831
+      targetPort: 6831
+      protocol: UDP
+  type: ClusterIP

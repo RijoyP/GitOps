@@ -8,10 +8,16 @@ spec:
   chart:
     spec:
       chart: kibana
-      version: "7.17.3"
+      version: "7.9.2"
       sourceRef:
         kind: HelmRepository
         name: elastic
         namespace: flux-system
   values:
+    image:
+      repository: docker.elastic.co/kibana/kibana
+      tag: "7.9.2"
     elasticsearchHosts: "http://elasticsearch-master:9200"
+    service:
+      type: ClusterIP
+      port: 5601
