@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   releaseName: kibana
-  interval: 15m
+  interval: 10m
   chart:
     spec:
       chart: kibana
@@ -14,9 +14,12 @@ spec:
         kind: HelmRepository
         name: elastic
         namespace: flux-system
+  timeout: 10m
   values:
-    image: docker.elastic.co/kibana/kibana:7.17.3
-    elasticsearchHosts: "http://elasticsearch-master:9200"
+    image:
+      repository: docker.elastic.co/kibana/kibana
+      tag: 7.17.3
+    elasticsearchHosts: "http://elasticsearch-master.flux-system.svc.cluster.local:9200"
     resources:
       requests:
         cpu: 100m
