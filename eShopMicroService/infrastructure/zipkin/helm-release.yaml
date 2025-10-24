@@ -31,6 +31,10 @@ spec:
         memory: 256Mi
     ingress:
       enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
       hosts:
-        - name: zipkin.monitoring.example.com
-          path: /
+        - host: zipkin.flux-system.example.com
+          paths:
+            - path: /
+              pathType: Prefix
