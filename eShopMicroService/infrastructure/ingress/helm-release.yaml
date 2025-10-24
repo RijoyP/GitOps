@@ -9,14 +9,18 @@ spec:
   chart:
     spec:
       chart: ingress-nginx
-      version: "5.3.0"    # adjust latest stable
+      version: "4.11.2"  # ✅ Valid version
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
         namespace: flux-system
+  install:
+    createNamespace: true
   values:
     controller:
       service:
-        type: LoadBalancer
-      admissionWebhooks:
-        enabled: true
+        type: LoadBalancer   # Exposes the ingress to public IP
+      watchIngressWithoutClass: true
+      ingressClassResource:
+        name: nginx
+        controllerValue: "k8s.io/ingress-nginx"
