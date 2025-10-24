@@ -5,8 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   releaseName: kibana
-  interval: 10m
-  timeout: 15m
+  interval: 15m
   chart:
     spec:
       chart: kibana
@@ -16,16 +15,12 @@ spec:
         name: elastic
         namespace: flux-system
   values:
-    image:
-      repository: docker.elastic.co/kibana/kibana
-      tag: 7.17.3
-    elasticsearchHosts: "http://elasticsearch-master.flux-system.svc.cluster.local:9200"
+    image: docker.elastic.co/kibana/kibana:7.17.3
+    elasticsearchHosts: "http://elasticsearch-master:9200"
     resources:
       requests:
-        cpu: 25m
-        memory: 128Mi
-      limits:
         cpu: 100m
         memory: 256Mi
-    service:
-      type: ClusterIP
+      limits:
+        cpu: 200m
+        memory: 512Mi
