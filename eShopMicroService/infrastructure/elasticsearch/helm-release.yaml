@@ -1,3 +1,5 @@
+# FIXED infrastructure/apps/elasticsearch/helmrelease.yaml
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -5,54 +7,85 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  timeout: 15m
+  timeout: 20m
   releaseName: elasticsearch
   
   chart:
     spec:
       chart: elasticsearch
-      version: "7.17.3"  # Stable, well-tested version
+      version: "7.17.3"
       sourceRef:
         kind: HelmRepository
-        name: elastic-helm-repo
+        name: elastic
         namespace: flux-system
       interval: 24h
   
+  targetNamespace: logging
+  
   install:
     crds: Skip
-    createNamespace: false
+    createNamespace: true
     remediation:
-      retries: 5
-    timeout: 30m
+      retries: 3
+    timeout: 20m
   
   upgrade:
     crds: Skip
     cleanupOnFail: true
     remediation:
-      retries: 5
-    timeout: 15m
+      retries: 3
+    timeout: 20m
   
-  # Keep minimal values for reliability
   values:
-    # Single node setup
     replicas: 1
     minimumMasterNodes: 1
+    
+    clusterHealthCheckParams: "wait_for_status=yellow&timeout=5s"
+    
     resources:
       requests:
-        cpu: "100m"
-        memory: "512Mi"
+        cpu: "200m"
+        memory: "1Gi"
       limits:
         cpu: "1000m"
-        memory: "1Gi"
+        memory: "2Gi"
     
-    # Small heap
-    esJavaOpts: "-Xmx256m -Xms256m"
+    esJavaOpts: "-Xmx512m -Xms512m"
     
-    # Disable resource-intensive features
+    volumeClaimTemplate:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "default"
+      resources:
+        requests:
+          storage: 10Gi
+    
+    esConfig:
+      elasticsearch.yml: |
+        cluster.name: "elasticsearch"
+        network.host: 0.0.0.0
+        xpack.security.enabled: false
+        discovery.type: single-node
+    
+    # THIS IS THE FIX! Enable the sysctl init container
     sysctlInitContainer:
-      enabled: false
+      enabled: true
     
-    # Service
-    service:
-      type: ClusterIP
+    # Adjust readiness probe
+    readinessProbe:
+      failureThreshold: 10
+      initialDelaySeconds: 90
+      periodSeconds: 10
+      successThreshold: 3
+      timeoutSeconds: 10
     
+    # Security context for init container
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+    
+    securityContext:
+      capabilities:
+        drop:
+          - ALL
+      runAsNonRoot: true
+      runAsUser: 1000
