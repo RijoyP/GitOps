@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: elasticsearch
-      version: "7.17.3"  # Stable, well-tested version
+      version: "7.9.2"  # Stable, well-tested version
       sourceRef:
         kind: HelmRepository
         name: elastic-helm-repo
