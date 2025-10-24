@@ -2,7 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: rabbitmq
-  namespace: flux-system
+  namespace: messaging
 spec:
   releaseName: rabbitmq
   interval: 10m
