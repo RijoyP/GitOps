@@ -21,7 +21,7 @@ spec:
     image:
       registry: docker.io
       repository: bitnami/rabbitmq
-      tag: 3.12.12-debian-11-r10 
+      tag: 3.13.0-debian-11-r0
     service:
       type: ClusterIP
     resources:
