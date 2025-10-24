@@ -16,11 +16,9 @@ spec:
       version: "7.17.3"
       sourceRef:
         kind: HelmRepository
-        name: elastic
+        name: elastic-helm-repo
         namespace: flux-system
       interval: 24h
-  
-  targetNamespace: logging
   
   install:
     crds: Skip
