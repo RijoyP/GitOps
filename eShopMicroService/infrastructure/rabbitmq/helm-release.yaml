@@ -14,9 +14,6 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
-  install:
-    createNamespace: true
-  timeout: 10m
   values:
     auth:
       username: user
@@ -25,8 +22,8 @@ spec:
       type: ClusterIP
     resources:
       requests:
-        cpu: 50m
-        memory: 128Mi
+        cpu: 100m
+        memory: 256Mi
       limits:
         cpu: 200m
-        memory: 256Mi
+        memory: 512Mi
