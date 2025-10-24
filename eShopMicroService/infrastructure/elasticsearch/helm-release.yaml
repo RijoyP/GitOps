@@ -18,8 +18,6 @@ spec:
         namespace: flux-system
       interval: 24h
   
-  targetNamespace: logging
-  
   install:
     crds: Skip
     createNamespace: false

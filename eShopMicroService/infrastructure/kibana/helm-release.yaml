@@ -18,8 +18,6 @@ spec:
         namespace: flux-system
       interval: 12h
   
-  targetNamespace: logging
-  
   dependsOn:
     - name: elasticsearch
       namespace: flux-system
