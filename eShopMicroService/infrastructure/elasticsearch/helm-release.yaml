@@ -4,17 +4,17 @@ metadata:
   name: elasticsearch
   namespace: monitoring
 spec:
+  releaseName: elasticsearch
   interval: 15m
   chart:
     spec:
       chart: elasticsearch
-      version: "7.9.2"
+      version: "7.17.3"
       sourceRef:
         kind: HelmRepository
         name: elastic
         namespace: flux-system
   values:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
     replicas: 1
     minimumMasterNodes: 1
     resources:
@@ -29,4 +29,3 @@ spec:
       resources:
         requests:
           storage: 1Gi
-
