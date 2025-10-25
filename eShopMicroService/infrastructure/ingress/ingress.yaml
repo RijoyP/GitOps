@@ -7,6 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
 spec:
   ingressClassName: nginx
   rules:
@@ -45,10 +46,10 @@ spec:
                 port:
                   number: 9411
           
-          # - path: /rabbitmq(/|$)(.*)
-          #   pathType: ImplementationSpecific
-          #   backend:
-          #     service:
-          #       name: rabbitmq
-          #       port:
-          #         number: 15672
+          - path: /jaeger(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: jaeger-query
+                port:
+                  number: 16687
