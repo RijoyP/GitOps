@@ -31,6 +31,9 @@ spec:
         memory: 256Mi
     ingress:
       enabled: false
+    env:
+      - name: SERVER_SERVLET_CONTEXT_PATH
+        value: /zipkin
       # annotations:
       #   kubernetes.io/ingress.class: nginx
       # hosts:
