@@ -46,12 +46,12 @@ spec:
         cpu: 500m
         memory: 512Mi
     ingress:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        kubernetes.io/ingress.class: nginx
-      hosts:
-        - grafana.flux-system.example.com
-      path: /
-      pathType: Prefix
+      enabled: false
+      # ingressClassName: nginx
+      # annotations:
+      #   kubernetes.io/ingress.class: nginx
+      # hosts:
+      #   - grafana.flux-system.example.com
+      # path: /
+      # pathType: Prefix
 
