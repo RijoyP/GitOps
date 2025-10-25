@@ -4,54 +4,61 @@ metadata:
   name: monitoring-ingress
   namespace: flux-system
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /\$2
+    # CRITICAL: This regex captures everything after /grafana/ as $2
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    # Allow cross-namespace service references
+    nginx.ingress.kubernetes.io/service-upstream: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: 4.220.25.50.nip.io   # nip.io resolves automatically to your public IP
+    - host: 4.220.25.50.nip.io
       http:
         paths:
-          - path: /grafana
-            pathType: Prefix
+          # Grafana - CORRECT regex pattern
+          - path: /grafana(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: grafana
+                name: grafana.monitoring.svc.cluster.local
                 port:
                   number: 80
-          - path: /prometheus
-            pathType: Prefix
+          
+          # Prometheus - CORRECT regex pattern
+          - path: /prometheus(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: prometheus-kube-prometheus-prometheus
+                name: prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local
                 port:
                   number: 9090
-          - path: /kibana
-            pathType: Prefix
+          
+          # Kibana - CORRECT regex pattern
+          - path: /kibana(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: kibana-kibana
+                name: kibana-kibana.logging.svc.cluster.local
                 port:
                   number: 5601
-          - path: /zipkin
-            pathType: Prefix
+          
+          # Zipkin - CORRECT regex pattern
+          - path: /zipkin(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: zipkin
+                name: zipkin.tracing.svc.cluster.local
                 port:
                   number: 9411
-          - path: /jaeger
-            pathType: Prefix
+          
+          # Jaeger - CORRECT regex pattern
+          - path: /jaeger(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: jaeger-query
+                name: jaeger-query.tracing.svc.cluster.local
                 port:
                   number: 16686
-          - path: /rabbitmq
-            pathType: Prefix
-            backend:
-              service:
-                name: rabbitmq
-                port:
-                  number: 15672
+          
