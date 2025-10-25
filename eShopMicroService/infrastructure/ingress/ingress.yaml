@@ -45,10 +45,10 @@ spec:
                 port:
                   number: 9411
           
-          - path: /rabbitmq(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: rabbitmq
-                port:
-                  number: 15672
+          # - path: /rabbitmq(/|$)(.*)
+          #   pathType: ImplementationSpecific
+          #   backend:
+          #     service:
+          #       name: rabbitmq
+          #       port:
+          #         number: 15672
