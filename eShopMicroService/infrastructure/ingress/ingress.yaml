@@ -2,13 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: monitoring-ingress
-  namespace: monitoring
+  namespace: flux-system
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
   ingressClassName: nginx
   rules:
-    - host: 4.220.25.50.nip.io
+    - host: 4.220.25.50.nip.io   # nip.io resolves automatically to your public IP
       http:
         paths:
           - path: /grafana
@@ -22,23 +22,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: prometheus-operated
+                name: prometheus-kube-prometheus-prometheus
                 port:
                   number: 9090
-          - path: /jaeger
-            pathType: Prefix
-            backend:
-              service:
-                name: jaeger-query
-                port:
-                  number: 16686
-          - path: /zipkin
-            pathType: Prefix
-            backend:
-              service:
-                name: zipkin
-                port:
-                  number: 9411
           - path: /kibana
             pathType: Prefix
             backend:
@@ -46,10 +32,24 @@ spec:
                 name: kibana-kibana
                 port:
                   number: 5601
-          - path: /elasticsearch
+          - path: /zipkin
             pathType: Prefix
             backend:
               service:
-                name: elasticsearch-master
+                name: zipkin
                 port:
-                  number: 9200
+                  number: 9411
+          - path: /jaeger
+            pathType: Prefix
+            backend:
+              service:
+                name: jaeger-query
+                port:
+                  number: 16686
+          - path: /rabbitmq
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbitmq
+                port:
+                  number: 15672
