@@ -10,20 +10,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: 4.220.25.50.nip.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: zipkin
-                port:
-                  number: 9411
     - host: ""  # catch-all for direct IP access
       http:
         paths:
-          - path: /
+          - path: /zipkin(/|$)(.*)
             pathType: Prefix
             backend:
               service:
