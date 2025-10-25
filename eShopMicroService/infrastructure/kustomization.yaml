@@ -33,7 +33,7 @@ resources:
   # Phase 5: Distributed Tracing Stack
   # Tracing components can be deployed in parallel
   - zipkin/        # Independent tracing service
-  # - jaeger/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
+  - jaeger/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
 
   # Phase 6: Message Broker - Can be deployed independently
   - rabbitmq/
