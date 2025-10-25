@@ -22,7 +22,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: grafana.monitoring.svc.cluster.local
+                name: grafana.flux-system.svc.cluster.local
                 port:
                   number: 80
           
@@ -31,7 +31,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local
+                name: prometheus-kube-prometheus-prometheus.flux-system.svc.cluster.local
                 port:
                   number: 9090
           
@@ -40,7 +40,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: kibana-kibana.logging.svc.cluster.local
+                name: kibana-kibana.flux-system.svc.cluster.local
                 port:
                   number: 5601
           
@@ -49,7 +49,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: zipkin.tracing.svc.cluster.local
+                name: zipkin.flux-system.svc.cluster.local
                 port:
                   number: 9411
           
@@ -58,7 +58,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: jaeger-query.tracing.svc.cluster.local
+                name: jaeger-query.flux-system.svc.cluster.local
                 port:
                   number: 16686
           
