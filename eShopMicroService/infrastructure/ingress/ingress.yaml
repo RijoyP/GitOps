@@ -16,9 +16,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: grafana
+                name: zipkin
                 port:
-                  number: 80
+                  number: 9411
     - host: ""  # catch-all for direct IP access
       http:
         paths:
@@ -26,6 +26,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: grafana
+                name: zipkin
                 port:
-                  number: 80
+                  number: 9411
