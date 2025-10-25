@@ -14,20 +14,20 @@ spec:
     - host: 4.220.25.50.nip.io
       http:
         paths:
-          - path: /grafana(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: grafana
-                port:
-                  number: 80
-          - path: /prometheus(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: prometheus-kube-prometheus-prometheus
-                port:
-                  number: 9090
+          # - path: /grafana
+          #   pathType: ImplementationSpecific
+          #   backend:
+          #     service:
+          #       name: grafana
+          #       port:
+          #         number: 80
+          # - path: /prometheus(/|$)(.*)
+          #   pathType: ImplementationSpecific
+          #   backend:
+          #     service:
+          #       name: prometheus-kube-prometheus-prometheus
+          #       port:
+          #         number: 9090
           # - path: /kibana(/|$)(.*)
           #   pathType: ImplementationSpecific
           #   backend:
@@ -35,7 +35,7 @@ spec:
           #       name: kibana-kibana.monitoring.svc.cluster.local
           #       port:
           #         number: 5601
-          - path: /zipkin(/|$)(.*)
+          - path: /zipkin
             pathType: ImplementationSpecific
             backend:
               service:
