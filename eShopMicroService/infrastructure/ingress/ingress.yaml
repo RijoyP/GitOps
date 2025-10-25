@@ -32,7 +32,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: kibana-kibana.monitoring.svc.cluster.local
+                name: kibana-kibana
                 port:
                   number: 5601
           - path: /zipkin
