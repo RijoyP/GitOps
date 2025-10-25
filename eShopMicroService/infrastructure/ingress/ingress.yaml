@@ -4,61 +4,53 @@ metadata:
   name: monitoring-ingress
   namespace: flux-system
   annotations:
-    # CRITICAL: This regex captures everything after /grafana/ as $2
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-    # Allow cross-namespace service references
     nginx.ingress.kubernetes.io/service-upstream: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: 4.220.25.50.nip.io
+    - host: 4.220.25.50
       http:
         paths:
-          # Grafana - CORRECT regex pattern
           - path: /grafana(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: grafana.flux-system.svc.cluster.local
+                name: grafana
                 port:
                   number: 80
-          
-          # Prometheus - CORRECT regex pattern
+
           - path: /prometheus(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: prometheus-kube-prometheus-prometheus.flux-system.svc.cluster.local
+                name: prometheus-kube-prometheus-prometheus
                 port:
                   number: 9090
-          
-          # Kibana - CORRECT regex pattern
+
           - path: /kibana(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: kibana-kibana.flux-system.svc.cluster.local
+                name: kibana-kibana
                 port:
                   number: 5601
-          
-          # Zipkin - CORRECT regex pattern
+
           - path: /zipkin(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: zipkin.flux-system.svc.cluster.local
+                name: zipkin
                 port:
                   number: 9411
-          
-          # Jaeger - CORRECT regex pattern
+
           - path: /jaeger(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: jaeger-query.flux-system.svc.cluster.local
+                name: jaeger-query
                 port:
                   number: 16686
-          
