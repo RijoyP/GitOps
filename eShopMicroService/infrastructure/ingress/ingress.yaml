@@ -19,3 +19,13 @@ spec:
                 name: grafana
                 port:
                   number: 80
+    - host: ""  # catch-all for direct IP access
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 80
