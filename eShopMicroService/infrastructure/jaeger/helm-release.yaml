@@ -17,10 +17,21 @@ spec:
   values:
     allInOne:
       enabled: false  # disable all-in-one
+
     query:
       enabled: true
       service:
-        type: ClusterIP  # required for Ingress
+        type: ClusterIP
+        ports:
+          - name: http-query
+            port: 80
+            targetPort: 16686
+          - name: grpc
+            port: 16685
+            targetPort: 16685
+          - name: admin
+            port: 16687
+            targetPort: 16687
       ingress:
         enabled: false
       resources:
@@ -30,6 +41,7 @@ spec:
         limits:
           cpu: 200m
           memory: 256Mi
+
     collector:
       enabled: true
       service:
@@ -41,9 +53,11 @@ spec:
         limits:
           cpu: 200m
           memory: 256Mi
+
     agent:
       enabled: true
       service:
         type: ClusterIP
+
     storage:
       type: memory
