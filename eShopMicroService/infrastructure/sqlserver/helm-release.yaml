@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: sqlserver
+  namespace: flux-system
+spec:
+  interval: 10m
+  releaseName: sqlserver
+  chart:
+    spec:
+      chart: generic
+      version: "0.1.0"
+      sourceRef:
+        kind: HelmRepository
+        name: mcr
+        namespace: flux-system
+  install:
+    createNamespace: true
+  values:
+    image:
+      repository: mcr.microsoft.com/mssql/server
+      tag: 2022-latest
+    containerPorts:
+      - name: sql
+        containerPort: 1433
+    env:
+      - name: ACCEPT_EULA
+        value: "Y"
+      - name: SA_PASSWORD
+        value: "sqlserver@123"
+    service:
+      type: ClusterIP
+      port: 1433
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi

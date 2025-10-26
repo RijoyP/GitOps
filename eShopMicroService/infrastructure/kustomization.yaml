@@ -12,6 +12,7 @@ resources:
 
   # - helm-oci-repository.yaml
   - helm-elastic-repository.yaml
+  - helm-bitnami-repository.yaml
 
   # Phase 1: Service Mesh - Deploy first as it provides observability infrastructure
   # Istio must be deployed before other services for proper mesh injection
@@ -37,6 +38,11 @@ resources:
 
   # Phase 6: Message Broker - Can be deployed independently
   # - rabbitmq/
+
+  # Phase 7: Databases - Deploy last as they are backend services
+  - postgresql/
+  - sqlserver/
+  - redis/
 
 
 commonLabels:
