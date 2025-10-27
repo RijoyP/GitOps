@@ -20,7 +20,7 @@ spec:
       password: user123
     image:
       registry: docker.io
-      repository: rabbitmq
+      repository: bitnami/rabbitmq
       tag: 3.12-management
     service:
       type: ClusterIP
