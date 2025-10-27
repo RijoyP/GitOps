@@ -13,8 +13,6 @@ spec:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
-  install:
-    createNamespace: true
   values:
     prometheus:
       prometheusSpec:
