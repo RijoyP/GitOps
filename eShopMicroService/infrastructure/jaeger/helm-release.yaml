@@ -16,34 +16,12 @@ spec:
         namespace: flux-system
   values:
     allInOne:
-      enabled: false  # disable all-in-one
-    query:
-      enabled: true
-      service:
-        type: ClusterIP  # required for Ingress
-      ingress:
-        enabled: false
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-    collector:
       enabled: true
       service:
         type: ClusterIP
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-    agent:
-      enabled: true
-      service:
-        type: ClusterIP
+        queryPort: 16686
+      image:
+        repository: jaegertracing/all-in-one
+        tag: "1.53"
     storage:
       type: memory
