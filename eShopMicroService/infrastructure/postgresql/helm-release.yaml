@@ -20,7 +20,7 @@ spec:
     image:
       registry: docker.io
       repository: bitnami/postgresql
-      tag: 17.6.0-debian-12-r4
+      tag: latest
 
     architecture: standalone
     auth:
