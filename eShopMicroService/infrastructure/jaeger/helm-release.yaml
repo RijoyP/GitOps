@@ -16,48 +16,13 @@ spec:
         namespace: flux-system
   values:
     allInOne:
-      enabled: false  # disable all-in-one
-
-    query:
       enabled: true
+      image:
+        repository: jaegertracing/all-in-one
+        tag: "1.53"
       service:
         type: ClusterIP
-        ports:
-          - name: http-query
-            port: 80
-            targetPort: 16686
-          - name: grpc
-            port: 16685
-            targetPort: 16685
-          - name: admin
-            port: 16687
-            targetPort: 16687
       ingress:
         enabled: false
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-
-    collector:
-      enabled: true
-      service:
-        type: ClusterIP
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-
-    agent:
-      enabled: true
-      service:
-        type: ClusterIP
-
     storage:
       type: memory
