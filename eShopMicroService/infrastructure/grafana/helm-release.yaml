@@ -19,23 +19,23 @@ spec:
     adminPassword: "changeme"
     persistence:
       enabled: false
-    # datasources:
-    #   datasources.yaml:
-    #     apiVersion: 1
-    #     datasources:
-    #       - name: Prometheus
-    #         type: prometheus
-    #         url: http://prometheus-kube-prometheus-prometheus.flux-system.svc.cluster.local:9090
-    #         access: proxy
-    #         isDefault: true
-    #       # - name: Jaeger
-    #       #   type: jaeger
-    #       #   url: http://jaeger-query.flux-system.svc.cluster.local:16686
-    #       #   access: proxy
-    #       - name: Zipkin
-    #         type: zipkin
-    #         url: http://zipkin.flux-system.svc.cluster.local:9411
-    #         access: proxy
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+          - name: Prometheus
+            type: prometheus
+            url: http://prometheus-kube-prometheus-prometheus.flux-system.svc.cluster.local:9090
+            access: proxy
+            isDefault: true
+          # - name: Jaeger
+          #   type: jaeger
+          #   url: http://jaeger-query.flux-system.svc.cluster.local:16686
+          #   access: proxy
+          - name: Zipkin
+            type: zipkin
+            url: http://zipkin.flux-system.svc.cluster.local:9411
+            access: proxy
     service:
       type: ClusterIP
     resources:
@@ -46,12 +46,12 @@ spec:
         cpu: 500m
         memory: 512Mi
     ingress:
-      enabled: false
-      # ingressClassName: nginx
-      # annotations:
-      #   kubernetes.io/ingress.class: nginx
-      # hosts:
-      #   - grafana.flux-system.example.com
-      # path: /
-      # pathType: Prefix
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - grafana.flux-system.example.com
+      path: /
+      pathType: Prefix
 
