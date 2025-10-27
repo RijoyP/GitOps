@@ -34,13 +34,6 @@ spec:
         type: ClusterIP
         port: 16686  # UI port
         queryPort: 16686
-        agentZipkinThriftPort: 5775
-        agentCompactPort: 6831
-        agentBinaryPort: 6832
-        agentSamplingPort: 5778
-        collectorGrpcPort: 14250
-        collectorHttpPort: 14268
-        collectorZipkinPort: 9411
       
       # Resources
       resources:
