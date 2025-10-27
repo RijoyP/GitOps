@@ -37,10 +37,10 @@ resources:
   - jaeger/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
 
   # Phase 6: Message Broker - Can be deployed independently
-  # - rabbitmq/
+  - rabbitmq/
 
   # Phase 7: Databases - Deploy last as they are backend services
-  # - postgresql/
+  - postgresql/
   - sqlserver/
   - redis/
 
