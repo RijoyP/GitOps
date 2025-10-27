@@ -4,18 +4,16 @@ metadata:
   name: sqlserver
   namespace: flux-system
 spec:
-  interval: 10m
   releaseName: sqlserver
+  interval: 15m
   chart:
     spec:
-    chart: sqlserver
-    version: "1.0.0"
-    sourceRef:
-      kind: HelmRepository
-      name: mcr
-      namespace: flux-system
-  install:
-    createNamespace: true
+      chart: sqlserver               
+      version: 1.0.0                 
+      sourceRef:
+        kind: HelmRepository
+        name: mcr                    
+        namespace: flux-system
   values:
     image:
       repository: mcr.microsoft.com/mssql/server
