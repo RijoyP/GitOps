@@ -14,10 +14,12 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
-  install:
-    createNamespace: true
   values:
     architecture: standalone
+    image:
+      registry: docker.io
+      repository: bitnami/redis
+      tag: 8.2.1-debian-12-r0
     auth:
       enabled: false
     master:

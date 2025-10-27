@@ -17,6 +17,10 @@ spec:
   install:
     createNamespace: true
   values:
+    image:
+      registry: docker.io
+      repository: bitnami/postgresql
+      tag: 17.6.0-debian-12-r4
     architecture: standalone
     auth:
       postgresPassword: postgres123
