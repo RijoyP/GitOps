@@ -4,8 +4,6 @@ metadata:
   name: jaeger
   namespace: flux-system
 spec:
-  releaseName: jaeger
-  interval: 15m
   chart:
     spec:
       chart: jaeger
@@ -14,36 +12,42 @@ spec:
         kind: HelmRepository
         name: jaegertracing
         namespace: flux-system
+  interval: 5m
+  releaseName: jaeger
+  upgrade:
+    cleanupOnFail: true
+    crds: Skip
+    remediation:
+      retries: 3
   values:
     allInOne:
-      enabled: false  # disable all-in-one
-    query:
       enabled: true
-      service:
-        type: ClusterIP  # required for Ingress
+      image:
+        repository: jaegertracing/all-in-one
+        tag: "1.53"
       ingress:
         enabled: false
       resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
         requests:
           cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
           memory: 256Mi
-    collector:
-      enabled: true
       service:
         type: ClusterIP
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
-    agent:
-      enabled: true
-      service:
-        type: ClusterIP
+        ports:
+          - name: query-ui
+            port: 16686
+            targetPort: 16686
+            protocol: TCP
+          - name: admin
+            port: 16687
+            targetPort: 16687
+            protocol: TCP
+          - name: agent-compact
+            port: 6831
+            targetPort: 6831
+            protocol: UDP
     storage:
       type: memory
