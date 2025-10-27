@@ -16,18 +16,17 @@ spec:
         namespace: flux-system
   values:
     allInOne:
-      enabled: false  # disable all-in-one
-    query:
       enabled: true
+      image:
+        repository: jaegertracing/all-in-one
+        tag: "1.53"
       service:
         type: ClusterIP
-    collector:
-      enabled: true
-      service:
-        type: ClusterIP
-    agent:
-      enabled: true
-      service:
-        type: ClusterIP
+        ports:
+          - name: query
+            port: 16686
+            targetPort: 16686
+      ingress:
+        enabled: false
     storage:
       type: memory
