@@ -19,8 +19,8 @@ spec:
   values:
     image:
       registry: docker.io
-      repository: bitnami/postgresql
-      tag: 17.6.0-debian-12-r4
+      repository: postgresql
+      tag: latest
     architecture: standalone
     auth:
       postgresPassword: postgres123
