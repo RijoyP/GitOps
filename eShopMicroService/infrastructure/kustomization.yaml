@@ -40,7 +40,7 @@ resources:
   # - rabbitmq/
 
   # Phase 7: Databases - Deploy last as they are backend services
-  -# postgresql/
+  #- postgresql/
   - sqlserver/
   - redis/
 
