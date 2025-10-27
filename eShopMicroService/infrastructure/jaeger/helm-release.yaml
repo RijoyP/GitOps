@@ -2,7 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: jaeger
-  namespace: flux-system
+  namespace: monitoring
 spec:
   releaseName: jaeger
   interval: 15m
@@ -14,40 +14,36 @@ spec:
         kind: HelmRepository
         name: jaegertracing
         namespace: flux-system
-  upgrade:
-    crds: Skip
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  
   values:
-    # All-in-one deployment (agent, collector, query in one pod)
     allInOne:
+      enabled: false  # disable all-in-one
+    query:
       enabled: true
-      
-      image:
-        repository: jaegertracing/all-in-one
-        tag: "1.53"
-      
-      # Service configuration
       service:
-        type: ClusterIP
-        port: 16686  # UI port
-        queryPort: 16686
-      
-      # Resources
+        type: ClusterIP  # required for Ingress
+      ingress:
+        enabled: false
       resources:
         requests:
           cpu: 100m
-          memory: 256Mi
+          memory: 128Mi
         limits:
-          cpu: 500m
-          memory: 512Mi
-      
-      # Ingress
-      ingress:
-        enabled: false
-    
-    # Storage - memory (no persistence)
+          cpu: 200m
+          memory: 256Mi
+    collector:
+      enabled: true
+      service:
+        type: ClusterIP
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+    agent:
+      enabled: true
+      service:
+        type: ClusterIP
     storage:
       type: memory
