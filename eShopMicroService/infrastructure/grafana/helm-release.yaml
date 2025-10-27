@@ -14,12 +14,11 @@ spec:
         kind: HelmRepository
         name: grafana
         namespace: flux-system
+  timeout: 10m
   values:
     adminPassword: "changeme"
     persistence:
       enabled: false
-    ingress:
-      enabled: false     # ✅ Disable Grafana’s own ingress
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -29,5 +28,20 @@ spec:
             url: http://prometheus-kube-prometheus-prometheus.flux-system.svc.cluster.local:9090
             access: proxy
             isDefault: true
+          # - name: Jaeger
+          #   type: jaeger
+          #   url: http://jaeger-query.flux-system.svc.cluster.local:16686
+          #   access: proxy
+          # - name: Zipkin
+          #   type: zipkin
+          #   url: http://zipkin.flux-system.svc.cluster.local:9411
+            # access: proxy
     service:
       type: ClusterIP
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
