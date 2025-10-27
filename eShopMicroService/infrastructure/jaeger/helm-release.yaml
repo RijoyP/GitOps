@@ -21,7 +21,9 @@ spec:
   values:
     allInOne:
       enabled: true
-      image: jaegertracing/all-in-one:1.53
+      image:
+        repository: jaegertracing/all-in-one
+        tag: "1.53"
       resources:
         requests:
           cpu: 100m
@@ -39,3 +41,4 @@ spec:
       enabled: false
     storage:
       type: memory
+
