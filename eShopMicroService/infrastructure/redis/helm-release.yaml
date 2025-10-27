@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: redis
-      version: "18.5.0"
+      version: "20.0.7"
       sourceRef:
         kind: HelmRepository
         name: bitnami
@@ -18,7 +18,7 @@ spec:
     architecture: standalone
     image:
       registry: docker.io
-      repository: redis
+      repository: bitnami/redis
       tag: latest
     auth:
       enabled: false
