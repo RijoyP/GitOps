@@ -14,19 +14,47 @@ spec:
         kind: HelmRepository
         name: jaegertracing
         namespace: flux-system
+  upgrade:
+    crds: Skip
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  
   values:
+    # All-in-one deployment (agent, collector, query in one pod)
     allInOne:
       enabled: true
+      
       image:
         repository: jaegertracing/all-in-one
         tag: "1.53"
+      
+      # Service configuration
       service:
         type: ClusterIP
-        ports:
-          - name: query
-            port: 16686
-            targetPort: 16686
+        port: 16686  # UI port
+        queryPort: 16686
+        agentZipkinThriftPort: 5775
+        agentCompactPort: 6831
+        agentBinaryPort: 6832
+        agentSamplingPort: 5778
+        collectorGrpcPort: 14250
+        collectorHttpPort: 14268
+        collectorZipkinPort: 9411
+      
+      # Resources
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+      
+      # Ingress
       ingress:
         enabled: false
+    
+    # Storage - memory (no persistence)
     storage:
       type: memory
