@@ -8,12 +8,12 @@ spec:
   releaseName: sqlserver
   chart:
     spec:
-      chart: generic
-      version: "0.1.0"
-      sourceRef:
-        kind: HelmRepository
-        name: mcr
-        namespace: flux-system
+    chart: sqlserver
+    version: "1.0.0"
+    sourceRef:
+      kind: HelmRepository
+      name: mcr
+      namespace: flux-system
   install:
     createNamespace: true
   values:
