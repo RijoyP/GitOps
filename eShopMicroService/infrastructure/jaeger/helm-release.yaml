@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: jaeger
-      version: 3.4.1
+      version: 3.3.1
       sourceRef:
         kind: HelmRepository
         name: jaegertracing
@@ -21,7 +21,8 @@ spec:
       enabled: true
       service:
         type: ClusterIP  # required for Ingress
-        queryPort: 16686
+        port: 16686  # External port that we'll use
+        targetPort: 16686  # Container port
       ingress:
         enabled: false
       resources:
