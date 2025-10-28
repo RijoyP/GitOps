@@ -19,14 +19,6 @@ spec:
     adminPassword: "changeme"
     persistence:
       enabled: false
-    # Add custom grafana.ini configuration
-    grafana.ini:
-      tracing:
-        enabled: false 
-    # Override environment variables
-    env:
-      GF_TRACING_OPENTELEMETRY_OTLP_ADDRESS: ""
-      GF_TRACING_JAEGER_ADDRESS: ""
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -46,7 +38,6 @@ spec:
             access: proxy
     service:
       type: ClusterIP
-
     resources:
       requests:
         cpu: 100m
