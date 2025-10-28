@@ -23,6 +23,10 @@ spec:
     grafana.ini:
       tracing:
         enabled: false 
+    # Override environment variables
+    env:
+      GF_TRACING_OPENTELEMETRY_OTLP_ADDRESS: ""
+      GF_TRACING_JAEGER_ADDRESS: ""
     datasources:
       datasources.yaml:
         apiVersion: 1
