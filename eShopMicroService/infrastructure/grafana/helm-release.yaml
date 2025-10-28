@@ -38,7 +38,7 @@ spec:
             isDefault: true
           - name: Jaeger
             type: jaeger
-            url: http://jaeger-query.flux-system.svc.cluster.local:16687
+            url: http://jaeger-query.flux-system.svc.cluster.local:16686
             access: proxy
           - name: Zipkin
             type: zipkin
