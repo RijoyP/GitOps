@@ -17,8 +17,10 @@ spec:
   timeout: 10m
   values:
     adminPassword: "changeme"
+
     persistence:
       enabled: false
+
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -28,16 +30,18 @@ spec:
             url: http://prometheus-kube-prometheus-prometheus.flux-system.svc.cluster.local:9090
             access: proxy
             isDefault: true
-          # - name: Jaeger
-          #   type: jaeger
-          #   url: http://jaeger-query.flux-system.svc.cluster.local:16687
-          #   access: proxy
+          - name: Jaeger
+            type: jaeger
+            url: http://jaeger-query.flux-system.svc.cluster.local:16686
+            access: proxy
           - name: Zipkin
             type: zipkin
             url: http://zipkin.flux-system.svc.cluster.local:9411
             access: proxy
+
     service:
       type: ClusterIP
+
     resources:
       requests:
         cpu: 100m
@@ -45,6 +49,8 @@ spec:
       limits:
         cpu: 500m
         memory: 512Mi
+
     tracing:
       jaeger:
-        enabled: false
+        enabled: true
+        address: "jaeger-collector.flux-system.svc.cluster.local:14268"
