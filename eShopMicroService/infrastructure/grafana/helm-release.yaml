@@ -18,6 +18,16 @@ spec:
   values:
     adminPassword: "changeme"
 
+    env:
+    - name: GF_TRACING_ENABLED
+      value: "true"
+    - name: GF_TRACING_TYPE
+      value: "jaeger"
+    - name: GF_TRACING_JAEGER_AGENT_HOST
+      value: "jaeger-agent.flux-system.svc.cluster.local"
+    - name: GF_TRACING_JAEGER_AGENT_PORT
+      value: "5775"
+
     persistence:
       enabled: false
 
