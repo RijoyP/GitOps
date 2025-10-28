@@ -44,8 +44,8 @@ spec:
           cpu: 200m
           memory: 256Mi
     agent:
-      enabled: true
-      service:
-        type: ClusterIP
+      enabled: false
+      # service:
+      #   type: ClusterIP
     storage:
       type: memory
