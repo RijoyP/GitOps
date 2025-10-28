@@ -16,11 +16,13 @@ spec:
         namespace: flux-system
   timeout: 10m
   values:
-    tracing:
-      enabled: false  # <--- this stops Grafana’s internal tracer    
     adminPassword: "changeme"
     persistence:
       enabled: false
+    # Add custom grafana.ini configuration
+    grafana.ini:
+      tracing:
+        enabled: false 
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -38,15 +40,6 @@ spec:
             type: zipkin
             url: http://zipkin.flux-system.svc.cluster.local:9411
             access: proxy
-    env:
-    - name: GF_TRACING_ENABLED
-      value: "true"
-    - name: GF_TRACING_TYPE
-      value: "jaeger"
-    - name: GF_TRACING_JAEGER_AGENT_HOST
-      value: "jaeger-agent.flux-system.svc.cluster.local"
-    - name: GF_TRACING_JAEGER_AGENT_PORT
-      value: "5775"
     service:
       type: ClusterIP
 
