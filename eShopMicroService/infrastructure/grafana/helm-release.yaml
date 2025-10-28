@@ -32,10 +32,10 @@ spec:
           #   type: jaeger
           #   url: http://jaeger-query.flux-system.svc.cluster.local:16687
           #   access: proxy
-          # - name: Zipkin
-          #   type: zipkin
-          #   url: http://zipkin.flux-system.svc.cluster.local:9411
-          #   access: proxy
+          - name: Zipkin
+            type: zipkin
+            url: http://zipkin.flux-system.svc.cluster.local:9411
+            access: proxy
     service:
       type: ClusterIP
     resources:
