@@ -17,8 +17,7 @@ spec:
   timeout: 10m
   values:
     adminPassword: "changeme"
-
-    env:
+    environmentVariables:
     - name: GF_TRACING_ENABLED
       value: "true"
     - name: GF_TRACING_TYPE
