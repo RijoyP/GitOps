@@ -21,13 +21,21 @@ spec:
       tag: latest
 
     architecture: standalone
+
     auth:
       postgresPassword: postgres123
+
     primary:
+      podSecurityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+      containerSecurityContext:
+        runAsUser: 1001
       persistence:
         enabled: false
       service:
         type: ClusterIP
+
     resources:
       requests:
         cpu: 50m
