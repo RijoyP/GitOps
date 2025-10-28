@@ -21,8 +21,8 @@ spec:
       enabled: true
       service:
         type: ClusterIP  # required for Ingress
-        # port: 16686  # External port that we'll use
-        # targetPort: 16686  # Container port
+        port: 16686  # External port that we'll use
+        targetPort: 16686  # Container port
       ingress:
         enabled: false
       resources:
