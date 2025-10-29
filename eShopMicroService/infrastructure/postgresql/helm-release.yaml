@@ -15,11 +15,22 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
+  
+  install:
+    remediation:
+      retries: 3
+  
+  upgrade:
+    remediation:
+      retries: 3
+    # IMPORTANT: Force recreation for StatefulSets
+    force: true
+  
   values:
     image:
       registry: docker.io
       repository: bitnami/postgresql
-      tag: "15.6.0-debian-12-r0"  # Use PostgreSQL 15 (smaller image)
+      tag: "15.6.0-debian-12-r0"
       pullPolicy: IfNotPresent
 
     architecture: standalone
@@ -40,12 +51,26 @@ spec:
       
       service:
         type: ClusterIP
+      
+      readinessProbe:
+        enabled: true
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+      
+      livenessProbe:
+        enabled: true
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
 
     volumePermissions:
       enabled: false
 
     metrics:
-      enabled: false  # Disable metrics to reduce startup time
+      enabled: false
 
     resources:
       requests:
