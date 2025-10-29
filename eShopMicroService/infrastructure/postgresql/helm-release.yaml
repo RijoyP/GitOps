@@ -27,7 +27,11 @@ spec:
       postgresPassword: postgres123
     primary:
       persistence:
-        enabled: false
+        enabled: true
+      podSecurityContext:
+        fsGroup: 1001
+      containerSecurityContext:
+        runAsUser: 1001
       service:
         type: ClusterIP
     resources:
