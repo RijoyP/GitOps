@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: eshop-acr
-        namespace: flux-system
+        namespace: flux-apps
       version: 1.0.2
   valuesFrom:
     - kind: ConfigMap
