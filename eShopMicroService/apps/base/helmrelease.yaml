@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-boilerplate-chart
-      version: 0.1.0
+      version: 1.0.1
       sourceRef:
         kind: HelmRepository
         name: eshop-acr
