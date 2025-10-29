@@ -19,12 +19,11 @@ spec:
   install:
     remediation:
       retries: 3
+    createNamespace: false
   
   upgrade:
     remediation:
       retries: 3
-    # IMPORTANT: Force recreation for StatefulSets
-    force: true
   
   values:
     image:
@@ -38,6 +37,7 @@ spec:
     auth:
       postgresPassword: postgres123
       enablePostgresUser: true
+      database: "mydb"
 
     primary:
       podSecurityContext:
@@ -52,30 +52,16 @@ spec:
       service:
         type: ClusterIP
       
-      readinessProbe:
-        enabled: true
-        initialDelaySeconds: 10
-        periodSeconds: 10
-        timeoutSeconds: 5
-        failureThreshold: 6
-      
-      livenessProbe:
-        enabled: true
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        timeoutSeconds: 5
-        failureThreshold: 6
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 
     volumePermissions:
       enabled: false
 
     metrics:
       enabled: false
-
-    resources:
-      requests:
-        cpu: 50m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
