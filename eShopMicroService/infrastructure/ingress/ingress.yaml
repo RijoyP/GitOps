@@ -48,13 +48,13 @@ spec:
                 port:
                   number: 9200
           
-          # - path: /zipkin(/|$)(.*)
-          #   pathType: ImplementationSpecific
-          #   backend:
-          #     service:
-          #       name: zipkin
-          #       port:
-          #         number: 9411
+          - path: /zipkin(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: zipkin
+                port:
+                  number: 9411
           
           - path: /jaeger(/|$)(.*)
             pathType: ImplementationSpecific
