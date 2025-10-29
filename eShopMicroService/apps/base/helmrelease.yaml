@@ -1,24 +1,21 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: {{ .Values.releaseName | default "app-base" }}
+  name: app-placeholder
+  namespace: default
 spec:
-  releaseName: {{ .Values.releaseName | default "app-base" }}
+  releaseName: app-placeholder
+  interval: 5m
   chart:
     spec:
-      chart: eshopmicroserviceacr.azurecr.io/helm/app-boilerplate-chart:0.1.0
+      chart: app-boilerplate-chart
       sourceRef:
         kind: HelmRepository
         name: eshop-acr
-  values:
-    image: 
-      repository: "{{ .Values.image.repository }}"
-      tag: "{{ .Values.image.tag }}"
-      pullPolicy: "{{ .Values.image.pullPolicy }}"
-    replicaCount: {{ .Values.replicaCount }}
-    service: 
-      type: {{ .Values.service.type }}
-      port: {{ .Values.service.port }}
-      containerPort: {{ .Values.service.containerPort }}
-    configMapName: "{{ .Values.configMapName }}"
-    secretName: "{{ .Values.secretName }}"
+        namespace: flux-system
+      version: 1.0.2
+  valuesFrom:
+    - kind: ConfigMap
+      name: app-placeholder-config
+    - kind: Secret
+      name: app-placeholder-secret
