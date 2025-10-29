@@ -6,7 +6,7 @@ spec:
   releaseName: {{ .Values.releaseName | default "app-base" }}
   chart:
     spec:
-      chart: eshopmicroserviceacr.azurecr.io/helm/app-boilerplate-chart:0.1.0
+      chart: eshopmicroserviceacr.azurecr.io/helm/app-boilerplate-chart:1.0.2
       sourceRef:
         kind: HelmRepository
         name: eshop-acr
