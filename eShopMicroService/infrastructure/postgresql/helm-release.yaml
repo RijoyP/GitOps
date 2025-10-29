@@ -5,6 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
+  timeout: 15m
   releaseName: postgresql
   chart:
     spec:
@@ -18,55 +19,38 @@ spec:
     image:
       registry: docker.io
       repository: bitnami/postgresql
-      tag: "16.2.0-debian-12-r0"  # Use specific version instead of 'latest'
+      tag: "15.6.0-debian-12-r0"  # Use PostgreSQL 15 (smaller image)
+      pullPolicy: IfNotPresent
 
     architecture: standalone
 
     auth:
       postgresPassword: postgres123
+      enablePostgresUser: true
 
     primary:
-      # Fix the security context - these settings work together
       podSecurityContext:
-        enabled: true
-        fsGroup: 1001
-        fsGroupChangePolicy: "OnRootMismatch"  # Important for performance
+        enabled: false
       
       containerSecurityContext:
-        enabled: true
-        runAsUser: 1001
-        runAsNonRoot: true
-        allowPrivilegeEscalation: false
+        enabled: false
       
-      # Use emptyDir with proper configuration
       persistence:
-        enabled: true
-        storageClass: ""  # Use default storage class or emptyDir
-        size: 8Gi
-        # If you want to use emptyDir (non-persistent, for testing):
-        # existingClaim: ""
-        # subPath: ""
-      
-      # Alternative: Force emptyDir
-      extraVolumes:
-        - name: data
-          emptyDir: {}
-      
-      extraVolumeMounts:
-        - name: data
-          mountPath: /bitnami/postgresql
+        enabled: false
       
       service:
         type: ClusterIP
 
-    # Disable volumePermissions init container if it's causing issues
     volumePermissions:
       enabled: false
+
+    metrics:
+      enabled: false  # Disable metrics to reduce startup time
 
     resources:
       requests:
         cpu: 50m
         memory: 128Mi
       limits:
-        cpu: 100m
+        cpu: 200m
         memory: 256Mi
