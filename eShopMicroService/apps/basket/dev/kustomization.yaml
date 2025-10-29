@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namePrefix: basketapi-dev-
+namespace: basket
 
 resources:
   - ../../base
@@ -17,7 +17,7 @@ generatorOptions:
 patches:
   - target:
       kind: HelmRelease
-      name: app-base
+      name: basketapi
     patch: |-
       - op: replace
         path: /metadata/name
