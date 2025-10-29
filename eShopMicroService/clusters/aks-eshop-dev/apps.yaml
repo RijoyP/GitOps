@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 5m
-  path: ./apps/basket/dev
+  path: ../../apps/basket/dev
   prune: true
   sourceRef:
     kind: GitRepository
