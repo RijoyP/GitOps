@@ -1,0 +1,40 @@
+replicaCount: 1
+
+image:
+  repository: eshopmicroserviceacr.azurecr.io/basketapi
+  tag: "937"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  containerPort: 8080
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+
+env:
+  - name: ASPNETCORE_ENVIRONMENT
+    value: Development
+  - name: ASPNETCORE_URLS
+    value: "http://+:8080"
+  - name: ConnectionStrings__Database
+    value: "Server=eshopmicroservicepostgres.postgres.database.azure.com;Port=5432;User Id=postgres;Password=postgres123;Database=BasketDB;sslmode=allow"
+  - name: ConnectionStrings__Redis
+    value: "distributedcache:6379"
+  - name: MessageBrocker__Host
+    value: "amqp://ecommerce-mq:5672"
+  - name: MessageBrocker__UserName
+    value: "guest"
+  - name: MessageBrocker__Password
+    value: "guest"
+  - name: AuthAD__Authority
+    value: "https://duedendidentityserver:8081"

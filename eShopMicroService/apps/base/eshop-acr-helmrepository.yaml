@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: eshop-acr
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: oci://eshopmicroserviceacr.azurecr.io/helm
+  secretRef:
+    name: acr-secret
