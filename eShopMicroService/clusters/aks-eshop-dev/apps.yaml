@@ -1,14 +1,15 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps
-  namespace: flux-system
+  name: basket-dev
+  namespace: flux-apps
 spec:
   interval: 5m
-  path: ./eShopMicroService/apps
+  path: ./apps/basket/dev
   prune: true
-  dependsOn:
-    - name: infrastructure
   sourceRef:
     kind: GitRepository
     name: flux-system
+  targetNamespace: basket
+  dependsOn:
+    - name: flux-apps
