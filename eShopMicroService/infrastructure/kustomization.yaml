@@ -27,9 +27,10 @@ resources:
   - monitoring/prometheus/
   - monitoring/grafana/       
   - messaging/rabbitmq/
-  - postgresql/
-  - sqlserver/
   - redis/
+  # - postgresql/
+  # - sqlserver/
+
 
 
 commonLabels:
