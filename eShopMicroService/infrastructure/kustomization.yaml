@@ -27,7 +27,7 @@ resources:
   - monitoring/prometheus/
   - monitoring/grafana/       
   - messaging/rabbitmq/
-  - redis/
+  - storage/redis/
   # - postgresql/
   # - sqlserver/
 
