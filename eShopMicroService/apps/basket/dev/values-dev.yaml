@@ -25,9 +25,6 @@ resources:
 autoscaling:
   enabled: false
 
-serviceAccount:
-  create: true
-
 config:
   ASPNETCORE_ENVIRONMENT: "Development"
   ASPNETCORE_URLS: "http://+:8080"
