@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: grafana
-        namespace: flux-system
+        namespace: flux-infra
   timeout: 10m
   values:
     adminPassword: "changeme"
@@ -25,16 +25,16 @@ spec:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://prometheus-kube-prometheus-prometheus.flux-system.svc.cluster.local:9090
+            url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
             access: proxy
             isDefault: true
           - name: Jaeger
             type: jaeger
-            url: http://jaeger-query.flux-system.svc.cluster.local:16686
+            url: http://jaeger-query.tracing.svc.cluster.local:16686
             access: proxy
           - name: Zipkin
             type: zipkin
-            url: http://zipkin.flux-system.svc.cluster.local:9411
+            url: http://zipkin.tracing.svc.cluster.local:9411
             access: proxy
     service:
       type: ClusterIP

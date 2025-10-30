@@ -11,6 +11,7 @@ metadata:
 resources:
 
   # - helm-oci-repository.yaml
+  - namespace.yaml
   - helm-elastic-repository.yaml
   - helm-bitnami-repository.yaml
 
@@ -18,28 +19,14 @@ resources:
   # Istio must be deployed before other services for proper mesh injection
   #- istio/
   - ingress/
-  # Phase 2: Monitoring Stack - Deploy early to capture metrics from all services
-  # Prometheus should be available before other services start emitting metrics
-  - prometheus/
 
-  # Phase 3: Logging Stack - Deploy Elasticsearch before services that depend on it
-  # Elasticsearch must be ready before Jaeger and Kibana
-  - elasticsearch/
-
-  # Phase 4: Visualization and UI Components
-  # These depend on their respective backend services
-  - grafana/       # Depends on Prometheus (implicit via datasource config)
-  - kibana/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
-
-  # Phase 5: Distributed Tracing Stack
-  # Tracing components can be deployed in parallel
-  - zipkin/        # Independent tracing service
-  - jaeger/        # Depends on Elasticsearch (explicit dependency in HelmRelease)
-
-  # Phase 6: Message Broker - Can be deployed independently
-  - rabbitmq/
-
-  # Phase 7: Databases - Deploy last as they are backend services
+  - logging/elasticsearch/
+  - logging/kibana/        
+  - tracing/zipkin/       
+  - tracing/jaeger/       
+  - monitoring/prometheus/
+  - monitoring/grafana/       
+  - messaging/rabbitmq/
   - postgresql/
   - sqlserver/
   - redis/

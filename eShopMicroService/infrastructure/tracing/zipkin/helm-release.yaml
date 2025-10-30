@@ -2,7 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: zipkin
-  namespace: flux-system
+  namespace: tracing
 spec:
   interval: 10m
   releaseName: zipkin
@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: zipkin
-        namespace: flux-system
+        namespace: flux-infra
   install:
     createNamespace: true
   values: 

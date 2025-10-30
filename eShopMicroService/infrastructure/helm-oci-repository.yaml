@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: eshop-helm-repo
-  namespace: flux-system
+  namespace: flux-infra
 spec:
   type: oci
   interval: 5m
