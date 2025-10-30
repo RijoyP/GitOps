@@ -5,7 +5,7 @@ metadata:
   namespace: tracing
 spec:
   interval: 10m
-  releaseName: 
+  releaseName: zipkin
   targetNamespace: tracing
   chart:
     spec:
