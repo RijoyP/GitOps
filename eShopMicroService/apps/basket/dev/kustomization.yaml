@@ -1,19 +1,18 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-namePrefix: basketapi-dev-
-
+namespace: flux-apps
 resources:
   - ../../base
-
 configMapGenerator:
-  - name: basketapi-dev-values
+  - name: basketapi-dev-config        # Explicit name
     files:
       - values.yaml=values-dev.yaml
-
+secretGenerator:
+  - name: basketapi-dev-secret        # Explicit name
+    files:
+      - values.yaml=values-dev.yaml
 generatorOptions:
   disableNameSuffixHash: true
-
 patches:
   - target:
       kind: HelmRelease
@@ -21,10 +20,19 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/name
-        value: basketapi-dev
+        value: basketapi-dev              # Explicit name
       - op: replace
         path: /spec/releaseName
-        value: basketapi-dev
-      - op: replace
-        path: /spec/valuesFrom/0/name
-        value: basketapi-dev-values
+        value: basketapi-dev              # Explicit name
+      - op: add
+        path: /spec/valuesFrom/-
+        value:
+          kind: ConfigMap
+          name: basketapi-dev-config      # Matches generator
+          optional: false
+      - op: add
+        path: /spec/valuesFrom/-
+        value:
+          kind: Secret
+          name: basketapi-dev-secret      # Matches generator
+          optional: false
