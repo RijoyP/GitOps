@@ -25,6 +25,13 @@ resources:
 autoscaling:
   enabled: false
 
+serviceAccount:
+  create: false
+
+envFrom:
+  configMap: basketapi-dev-config
+  secret: basketapi-dev-secret
+
 config:
   ASPNETCORE_ENVIRONMENT: "Development"
   ASPNETCORE_URLS: "http://+:8080"
