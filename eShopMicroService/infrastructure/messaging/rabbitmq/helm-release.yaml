@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: rabbitmq
-      version: "16.0.14"       # <- Use a valid chart version
+      version: "14.6.6"       # <- Use a valid chart version
       sourceRef:
         kind: HelmRepository
         name: bitnami
