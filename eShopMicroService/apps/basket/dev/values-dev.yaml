@@ -26,7 +26,11 @@ autoscaling:
   enabled: false
 
 serviceAccount:
-  create: false
+  create: true
+  annotations:
+    azure.workload.identity/client-id: "d5600dfe-0f09-4a9c-8e38-65d67a71f106"  # Add your Azure Managed Identity
+    azure.workload.identity/tenant-id: "16a2d9b2-56e7-4050-878d-9be9618dcb9f"
+  name: "basketapi-sa"
 
 envFrom:
   configMap: basketapi-dev-config
