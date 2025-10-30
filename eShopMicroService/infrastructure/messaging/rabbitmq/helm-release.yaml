@@ -5,29 +5,81 @@ metadata:
   namespace: flux-infra
 spec:
   interval: 10m
+  timeout: 10m
   releaseName: rabbitmq
-  targetNamespace: messaging   # <- Deploy into separate namespace
+  targetNamespace: messaging
   chart:
     spec:
       chart: rabbitmq
-      version: "14.6.6"       # <- Use a valid chart version
+      version: "14.6.6"
       sourceRef:
         kind: HelmRepository
         name: bitnami
         namespace: flux-infra
+      interval: 10m
+  install:
+    createNamespace: true
+    timeout: 10m
+    remediation:
+      retries: 3
+    # Critical: Replace on install conflicts
+    crds: CreateReplace
+  upgrade:
+    timeout: 10m
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    # Critical: Force recreation if StatefulSet changes
+    force: true
   values:
     auth:
       username: user
       password: password123
-      erlangCookie: secretcookie
+      erlangCookie: secretcookie123456  # Must be at least 20 characters
+    
+    # Use ClusterIP service
     service:
       type: ClusterIP
+      ports:
+        amqp: 5672
+        manager: 15672
+    
+    # Disable persistence to avoid PVC issues
     persistence:
       enabled: false
+    
+    # Minimal resources for faster scheduling
     resources:
       requests:
-        cpu: 50m
-        memory: 128Mi
-      limits:
         cpu: 100m
         memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    
+    # Single replica for simplicity
+    replicaCount: 1
+    
+    # Relaxed probes for slower startup
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 120
+      periodSeconds: 30
+      timeoutSeconds: 20
+      failureThreshold: 6
+      successThreshold: 1
+    
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      timeoutSeconds: 20
+      failureThreshold: 3
+      successThreshold: 1
+    
+    # Disable clustering for single replica
+    clustering:
+      enabled: false
+    
+    # Community plugins disabled
+    communityPlugins: ""
