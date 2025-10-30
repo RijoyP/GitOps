@@ -4,13 +4,13 @@ metadata:
   name: rabbitmq
   namespace: flux-infra
 spec:
-  releaseName: rabbitmq
   interval: 10m
-  targetNamespace: messaging
+  releaseName: rabbitmq
+  targetNamespace: messaging   # <- Deploy into separate namespace
   chart:
     spec:
       chart: rabbitmq
-      version: "12.10.0"
+      version: "16.0.14"       # <- Use a valid chart version
       sourceRef:
         kind: HelmRepository
         name: bitnami
@@ -18,16 +18,16 @@ spec:
   values:
     auth:
       username: user
-      password: user123
-    image:
-      repository: bitnami/rabbitmq
-      tag: 3.12-management
+      password: password123
+      erlangCookie: secretcookie
     service:
       type: ClusterIP
+    persistence:
+      enabled: false
     resources:
       requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
         cpu: 100m
         memory: 256Mi
-      limits:
-        cpu: 200m
-        memory: 512Mi
