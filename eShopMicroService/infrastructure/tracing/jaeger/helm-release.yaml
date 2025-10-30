@@ -2,11 +2,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: jaeger
-  namespace: tracing
+  namespace: flux-infra
 spec:
   releaseName: jaeger
   interval: 15m
-  # targetNamespace: tracing
+  targetNamespace: tracing
   chart:
     spec:
       chart: jaeger

@@ -2,11 +2,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kibana
-  namespace: logging
+  namespace: flux-infra
 spec:
   releaseName: kibana
   interval: 15m
-  # targetNamespace: elasticsearch
+  targetNamespace: elasticsearch
   chart:
     spec:
       chart: kibana
