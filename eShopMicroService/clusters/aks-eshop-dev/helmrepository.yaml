@@ -4,5 +4,8 @@ metadata:
   name: eshop-acr-repo
   namespace: flux-apps
 spec:
-  interval: 1h
-  url: oci://eshopmicroserviceacr.azurecr.io/helm
+  type: oci
+  interval: 5m
+  url: oci://acrlearnkubenetesflux.azurecr.io/helm
+  provider: azure
+
