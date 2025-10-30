@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - helmrepository.yaml
-  - ../../app/base/
-  - ../../app/basket/dev/
+  - ../../apps/base/
+  - ../../apps/basket/dev/
