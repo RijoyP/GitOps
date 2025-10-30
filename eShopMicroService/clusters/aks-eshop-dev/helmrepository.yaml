@@ -6,6 +6,6 @@ metadata:
 spec:
   type: oci
   interval: 5m
-  url: oci://acrlearnkubenetesflux.azurecr.io/helm
+  url: oci://eshopmicroserviceacr.azurecr.io/helm
   provider: azure
 
