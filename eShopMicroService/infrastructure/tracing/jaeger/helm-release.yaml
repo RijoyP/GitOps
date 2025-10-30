@@ -6,7 +6,7 @@ metadata:
 spec:
   releaseName: jaeger
   interval: 15m
-  targetNamespace: tracing
+  # targetNamespace: tracing
   chart:
     spec:
       chart: jaeger

@@ -4,9 +4,8 @@ metadata:
   name: prometheus
   namespace: monitoring
 spec:
-  releaseName: prometheus
   interval: 5m
-  targetNamespace: monitoring
+  # targetNamespace: monitoring
   chart:
     spec:
       chart: kube-prometheus-stack

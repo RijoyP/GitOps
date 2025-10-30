@@ -6,7 +6,7 @@ metadata:
 spec:
   releaseName: elasticsearch
   interval: 15m
-  targetNamespace: elasticsearch
+  # targetNamespace: elasticsearch
   chart:
     spec:
       chart: elasticsearch
