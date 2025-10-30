@@ -6,6 +6,7 @@ metadata:
 spec:
   releaseName: grafana
   interval: 10m
+  targetNamespace: monitoring
   chart:
     spec:
       chart: grafana

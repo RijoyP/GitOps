@@ -4,7 +4,9 @@ metadata:
   name: kibana
   namespace: logging
 spec:
+  releaseName: kibana
   interval: 15m
+  targetNamespace: elasticsearch
   chart:
     spec:
       chart: kibana
