@@ -6,3 +6,4 @@ resources:
   - helmrepository.yaml
   - ../../apps/basket/dev/
   - ../../apps/catelog/dev/
+  - ../../apps/discount/dev/
