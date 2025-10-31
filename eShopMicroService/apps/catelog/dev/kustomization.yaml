@@ -1,0 +1,38 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: flux-apps
+resources:
+  - ../../base
+configMapGenerator:
+  - name: catelogapi-dev-config        # Explicit name
+    files:
+      - values.yaml=values-dev.yaml
+secretGenerator:
+  - name: catelogapi-dev-secret        # Explicit name
+    files:
+      - values.yaml=values-dev.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+patches:
+  - target:
+      kind: HelmRelease
+      name: app-placeholder
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: catelogapi-dev              # Explicit name
+      - op: replace
+        path: /spec/releaseName
+        value: catelogapi-dev              # Explicit name
+      - op: add
+        path: /spec/valuesFrom/-
+        value:
+          kind: ConfigMap
+          name: catelogapi-dev-config      # Matches generator
+          optional: false
+      - op: add
+        path: /spec/valuesFrom/-
+        value:
+          kind: Secret
+          name: catelogapi-dev-secret      # Matches generator
+          optional: false
