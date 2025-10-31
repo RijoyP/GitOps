@@ -40,20 +40,9 @@ serviceAccount:
   create: false
   name: ""
 
-
 envFrom:
   configMap: discountapi-dev-config
-  secret: discountapi-dev-secret
 
 config:
   ASPNETCORE_ENVIRONMENT: "Development"
   ASPNETCORE_URLS: "http://+:8080"
-  ConnectionStrings__DatabaseHost: "eshopmicroservicepostgres.postgres.database.azure.com"
-  ConnectionStrings__DatabasePort: "5432"
-  ConnectionStrings__DatabaseUser: "postgres"
-  ConnectionStrings__DatabaseName: "BasketDB"
-  ConnectionStrings__DatabaseSslMode: "allow"
-
-secret:
-  MessageBrocker__Password: "guest"
-  DatabasePassword: "postgres123"
