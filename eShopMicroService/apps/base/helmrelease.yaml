@@ -13,5 +13,5 @@ spec:
         kind: HelmRepository
         name: eshop-acr-repo
         namespace: flux-apps
-      version: 1.0.7
+      version: 1.0.8
   valuesFrom: []
