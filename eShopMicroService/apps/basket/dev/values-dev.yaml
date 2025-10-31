@@ -22,7 +22,7 @@ resources:
 
 autoscaling:
   enabled: false
-  
+
 # autoscaling:
 #   enabled: true
 #   minReplicas: 1
@@ -48,11 +48,7 @@ envFrom:
 config:
   ASPNETCORE_ENVIRONMENT: "Development"
   ASPNETCORE_URLS: "http://+:8080"
-  ConnectionStrings__DatabaseHost: "eshopmicroservicepostgres.postgres.database.azure.com"
-  ConnectionStrings__DatabasePort: "5432"
-  ConnectionStrings__DatabaseUser: "postgres"
-  ConnectionStrings__DatabaseName: "BasketDB"
-  ConnectionStrings__DatabaseSslMode: "allow"
+  ConnectionStrings__Database: "Server=eshopmicroservicepostgres.postgres.database.azure.com;Port=5432;User Id=postgres;Password=postgres123;Database=BasketDB;Ssl Mode=Require;Trust Server Certificate=true"
   ConnectionStrings__Redis: "distributedcache:6379"
   MessageBrocker__Host: "amqp://ecommerce-mq:5672"
   MessageBrocker__UserName: "guest"
