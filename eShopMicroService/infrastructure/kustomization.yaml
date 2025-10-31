@@ -20,10 +20,12 @@ resources:
   #- istio/
   - ingress/
 
-  - logging  
+  - logging/elasticsearch/
+  - logging/kibana/        
   - tracing/zipkin/       
   - tracing/jaeger/       
-  - monitoring/     
+  - monitoring/prometheus/
+  - monitoring/grafana/       
   - messaging/rabbitmq/
   - storage/redis/
   # - postgresql/
