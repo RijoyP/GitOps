@@ -1,5 +1,5 @@
 releaseName: catelogapi-dev
-
+fullnameOverride: catelogapi-dev-app
 replicaCount: 1
 
 image:

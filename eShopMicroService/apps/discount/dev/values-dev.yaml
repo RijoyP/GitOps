@@ -1,5 +1,5 @@
 releaseName: discountapi-dev
-
+fullnameOverride: discountapi-dev-app
 replicaCount: 1
 
 image:

@@ -1,5 +1,5 @@
 releaseName: basketapi-dev
-
+fullnameOverride: basketapi-dev-app
 replicaCount: 1
 
 image:

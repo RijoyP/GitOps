@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - helmrepository.yaml
+  - ../../apps/nginx/dev/
   - ../../apps/basket/dev/
   - ../../apps/catelog/dev/
   - ../../apps/discount/dev/
