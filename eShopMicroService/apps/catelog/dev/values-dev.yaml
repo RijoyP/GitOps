@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: eshopmicroserviceacr.azurecr.io/catelogapi
-  tag: "1317"
+  tag: "1332"
   pullPolicy: IfNotPresent
 
 service:
