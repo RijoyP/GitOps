@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: 4.220.25.50.nip.io
+    - host: logging.4.220.25.50.nip.io
       http:
         paths:
           - path: /kibana(/|$)(.*)
