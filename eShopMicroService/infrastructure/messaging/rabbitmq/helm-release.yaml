@@ -7,7 +7,7 @@ spec:
   interval: 10m
   timeout: 10m
   releaseName: rabbitmq
-  targetNamespace: messaging
+  targetNamespace: messaging  # Deploy to messaging namespace
   chart:
     spec:
       chart: rabbitmq
@@ -22,52 +22,51 @@ spec:
     timeout: 10m
     remediation:
       retries: 3
-    # Critical: Replace on install conflicts
-    crds: CreateReplace
   upgrade:
     timeout: 10m
+    force: true
     remediation:
       retries: 3
-      remediateLastFailure: true
-    # Critical: Force recreation if StatefulSet changes
-    force: true
   values:
+    image:
+      registry: docker.io
+      repository: bitnami/rabbitmq
+      tag: 3.13.7-debian-12-r5
+      pullPolicy: IfNotPresent
+    
     auth:
       username: user
       password: password123
-      erlangCookie: secretcookie123456  # Must be at least 20 characters
+      erlangCookie: secretcookie123456789012
     
-    # Use ClusterIP service
+    replicaCount: 1
+    
+    clustering:
+      enabled: false
+    
+    persistence:
+      enabled: false
+    
+    resources:
+      limits:
+        cpu: 300m
+        memory: 384Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    
     service:
       type: ClusterIP
       ports:
         amqp: 5672
         manager: 15672
     
-    # Disable persistence to avoid PVC issues
-    persistence:
-      enabled: false
-    
-    # Minimal resources for faster scheduling
-    resources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: 500m
-        memory: 512Mi
-    
-    # Single replica for simplicity
-    replicaCount: 1
-    
-    # Relaxed probes for slower startup
     livenessProbe:
       enabled: true
       initialDelaySeconds: 120
       periodSeconds: 30
       timeoutSeconds: 20
       failureThreshold: 6
-      successThreshold: 1
     
     readinessProbe:
       enabled: true
@@ -75,11 +74,5 @@ spec:
       periodSeconds: 30
       timeoutSeconds: 20
       failureThreshold: 3
-      successThreshold: 1
     
-    # Disable clustering for single replica
-    clustering:
-      enabled: false
-    
-    # Community plugins disabled
-    communityPlugins: ""
+    extraPlugins: "rabbitmq_management"

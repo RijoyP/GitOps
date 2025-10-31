@@ -4,5 +4,7 @@ namespace: flux-system
 resources:
   - helm-repository.yaml
   - helm-release.yaml
-  - ingress.yaml
+  - ../logging/ingress.yaml
+  - ../monitoring/ingress.yaml
+  - ../tracing/ingress.yaml
   
