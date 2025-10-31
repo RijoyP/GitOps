@@ -6,10 +6,5 @@ namespace: flux-apps
 resources:
   - helmrelease.yaml
 
-configMapGenerator:
-  - name: app-base-values
-    files:
-      - values.yaml
-
 generatorOptions:
-  disableNameSuffixHash: false
+  disableNameSuffixHash: true
