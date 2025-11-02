@@ -1,0 +1,65 @@
+trigger: none
+
+pool:
+ vmImage: "ubuntu-latest"
+
+parameters:
+- name: "enviorement"
+  type: string
+  default: "dev"
+
+variables:
+- group: Dev
+
+stages:
+
+- stage: Flux
+  jobs:
+  - job: FluxBootstrap
+    displayName: 'Flux Bootstrap' 
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Install Flux v2.6.3 and Bootstrap GitOps'
+      inputs:
+        azureSubscription: $(serviceConnection)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          set -e
+
+          FLUX_VERSION="2.6.3"
+          echo "➡ Downloading Flux CLI v${FLUX_VERSION}"
+          curl -sL "https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz" -o flux.tar.gz
+
+          echo "➡ Extracting Flux CLI"
+          tar -xzf flux.tar.gz
+
+          echo "➡ Move flux binary to /usr/local/bin"
+          sudo mv flux /usr/local/bin/flux
+
+          echo "➡ Verify installation"
+          flux --version
+          echo "➡ Get AKS credentials"
+          az aks get-credentials --resource-group $(resourceGroupName) --name $(aksName)
+
+          echo "➡ Pre-check Flux installation"
+          flux check --pre
+
+          echo "➡ Create namespace flux-system if not exists"
+          kubectl get ns flux-infra || kubectl create namespace flux-infra
+
+          echo "➡ Export Git token"
+          export GIT_PASSWORD=$(gitToken)
+
+          echo "➡ Bootstrap Flux GitOps"
+          flux bootstrap git \
+            --token-auth=true \
+            --url=$(gitRepoUrl) \
+            --branch=main \
+            --path=eShopMicroService/infrastructure \
+            --namespace=flux-infra
+          
+          echo "flux system release list"
+          kubectl get helmreleases -A
+
+    
